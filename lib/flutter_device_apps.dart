@@ -1,6 +1,11 @@
 import 'package:flutter_device_apps_platform_interface/flutter_device_apps_app_change_event.dart';
 import 'package:flutter_device_apps_platform_interface/flutter_device_apps_platform_interface.dart';
 
+export 'package:flutter_device_apps_platform_interface/flutter_device_apps_app_change_event.dart'
+    show AppChangeEvent, AppChangeType;
+export 'package:flutter_device_apps_platform_interface/flutter_device_apps_platform_interface.dart'
+    show AppInfo;
+
 /// Flutter plugin for listing/inspecting installed apps on Android and iOS devices.
 ///
 /// This plugin provides methods to:
