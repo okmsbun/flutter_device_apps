@@ -15,7 +15,7 @@ This is the umbrella package of the federated `flutter_device_apps` plugin famil
 * 🚀 Open an app by package name
 * ⚙️ Open system App Settings for a package
 * 🗑️ Trigger system uninstall UI for a package
-* 🔔 Listen to app change events (install / uninstall / update / enable / disable)
+* 🔔 Listen to app change events (install / uninstall / update)
 * 🏪 Get installer store information for apps
 
 ---
@@ -92,10 +92,6 @@ sub = FlutterDeviceApps.appChanges.listen((e) {
       print('App uninstalled: ${e.packageName}');  
     case AppChangeType.updated:
       print('App updated: ${e.packageName}');
-    case AppChangeType.enabled:
-      print('App enabled: ${e.packageName}');
-    case AppChangeType.disabled:
-      print('App disabled: ${e.packageName}');
     case null:
       print('Unknown change type');
   }
@@ -110,8 +106,6 @@ await FlutterDeviceApps.stopAppChangeStream();
 - `AppChangeType.installed` - New app installed
 - `AppChangeType.removed` - App uninstalled  
 - `AppChangeType.updated` - App updated to new version
-- `AppChangeType.enabled` - App re-enabled after being disabled
-- `AppChangeType.disabled` - App disabled (not uninstalled, just deactivated)
 
 ### Get installer store information
 
