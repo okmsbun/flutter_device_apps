@@ -81,4 +81,11 @@ class FlutterDeviceApps {
   ///
   /// Returns a Future that resolves to true if the app was successfully uninstalled, false otherwise.
   static Future<bool> uninstallApp(String packageName) => _p.uninstallApp(packageName);
+
+  /// Gets the installer store for the specified package name.
+  ///
+  /// [packageName] - The package name of the app to get the installer store for
+  ///
+  /// Returns a Future that resolves to the installer store name or null if not available.
+  static Future<String?> getInstallerStore(String packageName) => _p.getInstallerStore(packageName);
 }
