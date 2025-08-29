@@ -74,4 +74,11 @@ class FlutterDeviceApps {
   ///
   /// Returns a Future that resolves to true if the settings page was successfully opened, false otherwise.
   static Future<bool> openAppSettings(String packageName) => _p.openAppSettings(packageName);
+
+  /// Uninstalls the app with the specified package name.
+  ///
+  /// [packageName] - The package name of the app to uninstall
+  ///
+  /// Returns a Future that resolves to true if the app was successfully uninstalled, false otherwise.
+  static Future<bool> uninstallApp(String packageName) => _p.uninstallApp(packageName);
 }
