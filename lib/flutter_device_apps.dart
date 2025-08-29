@@ -67,4 +67,11 @@ class FlutterDeviceApps {
   /// Call this method to stop monitoring app installation/uninstallation events
   /// and clean up resources.
   static Future<void> stopAppChangeStream() => _p.stopAppChangeStream();
+
+  /// Opens the app settings for the specified package name.
+  ///
+  /// [packageName] - The package name of the app to open settings for
+  ///
+  /// Returns a Future that resolves to true if the settings page was successfully opened, false otherwise.
+  static Future<bool> openAppSettings(String packageName) => _p.openAppSettings(packageName);
 }
