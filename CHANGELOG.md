@@ -1,3 +1,7 @@
+## 0.3.0
+- Added comprehensive example app with improved UI, real-time monitoring, and pre-configured AndroidManifest
+- Added 6 professional screenshots in 2x3 grid layout to README
+
 ## 0.2.0
 - Enhanced README.md with professional badge layout for improved package visibility
 - Added centered HTML badges for pub.dev version, GitHub stars, Flutter documentation, MIT license, and source repository

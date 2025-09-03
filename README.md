@@ -30,6 +30,35 @@ This is the umbrella package of the federated `flutter_device_apps` plugin famil
 
 ---
 
+## 📱 Screenshots
+
+<table>
+  <tr>
+    <td align="center">
+      <img src="screenshots/screenshot1.png" alt="Screenshot 1" width="250"/>
+    </td>
+    <td align="center">
+      <img src="screenshots/screenshot2.png" alt="Screenshot 2" width="250"/>
+    </td>
+    <td align="center">
+      <img src="screenshots/screenshot3.png" alt="Screenshot 3" width="250"/>
+    </td>
+  </tr>
+  <tr>
+    <td align="center">
+      <img src="screenshots/screenshot4.png" alt="Screenshot 4" width="250"/>
+    </td>
+    <td align="center">
+      <img src="screenshots/screenshot5.png" alt="Screenshot 5" width="250"/>
+    </td>
+    <td align="center">
+      <img src="screenshots/screenshot6.png" alt="Screenshot 6" width="250"/>
+    </td>
+  </tr>
+</table>
+
+---
+
 ## Install
 
 Add to your `pubspec.yaml`:
