@@ -54,6 +54,29 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  flutter_device_apps:
+    dependency: "direct main"
+    description:
+      path: ".."
+      relative: true
+    source: path
+    version: "0.2.0"
+  flutter_device_apps_android:
+    dependency: transitive
+    description:
+      name: flutter_device_apps_android
+      sha256: "94e2741cb0970ac33787ad06f1e43fdd4b557bf91f7c8dd90fe015aacf6e3234"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.2.0"
+  flutter_device_apps_platform_interface:
+    dependency: transitive
+    description:
+      name: flutter_device_apps_platform_interface
+      sha256: fb80982290f664a3f7c6d480c37c51a9d21ca45219487f29a1ca7a5d1de47494
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.2.0"
   flutter_lints:
     dependency: "direct dev"
     description:
@@ -131,6 +154,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.9.1"
+  plugin_platform_interface:
+    dependency: transitive
+    description:
+      name: plugin_platform_interface
+      sha256: "4820fbfdb9478b1ebae27888254d445073732dae3d6ea81f0b7e06d5dedc3f02"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.1.8"
   sky_engine:
     dependency: transitive
     description: flutter
