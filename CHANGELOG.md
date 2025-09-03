@@ -1,3 +1,11 @@
+## 0.2.0
+- Enhanced README.md with professional badge layout for improved package visibility
+- Added centered HTML badges for pub.dev version, GitHub stars, Flutter documentation, MIT license, and source repository
+- Improved documentation presentation following modern Flutter package standards
+- Updated dependencies: flutter_device_apps_android ^0.2.0 and flutter_device_apps_platform_interface ^0.2.0
+- Enhanced package branding and visual consistency across the federated plugin ecosystem
+- Added GitHub repository badge with direct link to source code for better developer engagement
+
 ## 0.1.2
 - **BREAKING**: Simplified `AppChangeEvent` types - removed `enabled`/`disabled` (were not implemented)
 - Added `openAppSettings(String packageName)` API to open system app settings screen
