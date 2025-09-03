@@ -1,6 +1,6 @@
 name: flutter_device_apps
 description: App-facing API for listing/inspecting installed apps (federated).
-version: 0.3.0
+version: 0.3.1
 
 repository: https://github.com/okmsbun/flutter_device_apps
 issue_tracker: https://github.com/okmsbun/flutter_device_apps/issues

@@ -1,3 +1,6 @@
+## 0.3.1
+- Fixed screenshot URLs in README for proper display on pub.dev
+
 ## 0.3.0
 - Added comprehensive example app with improved UI, real-time monitoring, and pre-configured AndroidManifest
 - Added 6 professional screenshots in 2x3 grid layout to README
