@@ -12,51 +12,6 @@
 
 A Flutter plugin to **list**, **inspect**, and **interact with installed apps** on Android devices. Get app details, launch applications, and monitor installation changes programmatically.
 
-This is the umbrella package of the federated `flutter_device_apps` plugin family.
-
-> iOS/macOS/Web are not supported (platform limitations). Android only for now.
-
----
-
-## ✨ What you can do
-
-* 📦 List installed apps (optionally only launchable apps)
-* 🔎 Get details for a single app (name, version, install/update times, system flag, optional icon)
-* 🚀 Open an app by package name
-* ⚙️ Open system App Settings for a package
-* 🗑️ Trigger system uninstall UI for a package
-* 🔔 Listen to app change events (install / uninstall / update)
-* 🏪 Get installer store information for apps
-
----
-
-## 📱 Screenshots
-
-<table>
-  <tr>
-    <td align="center">
-      <img src="https://raw.githubusercontent.com/okmsbun/flutter_device_apps/main/screenshots/screenshot1.png" alt="Screenshot 1" width="250"/>
-    </td>
-    <td align="center">
-      <img src="https://raw.githubusercontent.com/okmsbun/flutter_device_apps/main/screenshots/screenshot2.png" alt="Screenshot 2" width="250"/>
-    </td>
-    <td align="center">
-      <img src="https://raw.githubusercontent.com/okmsbun/flutter_device_apps/main/screenshots/screenshot3.png" alt="Screenshot 3" width="250"/>
-    </td>
-  </tr>
-  <tr>
-    <td align="center">
-      <img src="https://raw.githubusercontent.com/okmsbun/flutter_device_apps/main/screenshots/screenshot4.png" alt="Screenshot 4" width="250"/>
-    </td>
-    <td align="center">
-      <img src="https://raw.githubusercontent.com/okmsbun/flutter_device_apps/main/screenshots/screenshot5.png" alt="Screenshot 5" width="250"/>
-    </td>
-    <td align="center">
-      <img src="https://raw.githubusercontent.com/okmsbun/flutter_device_apps/main/screenshots/screenshot6.png" alt="Screenshot 6" width="250"/>
-    </td>
-  </tr>
-</table>
-
 ---
 
 ## Install
@@ -68,8 +23,6 @@ dependencies:
   flutter_device_apps: latest_version
 ```
 
-Nothing else needed — the Android implementation is pulled in transitively and auto-registered.
-
 ---
 
 ## Quick start
@@ -80,9 +33,9 @@ Nothing else needed — the Android implementation is pulled in transitively and
 import 'package:flutter_device_apps/flutter_device_apps.dart';
 
 final apps = await FlutterDeviceApps.listApps(
-  includeSystem: false,    // Skip system apps (Settings, Phone, etc.)
-  onlyLaunchable: true,    // Only apps with launcher icons
-  includeIcons: false,     // Don't load icon bytes (better performance)
+  includeSystem: false,
+  onlyLaunchable: true,
+  includeIcons: false,
 );
 
 for (final app in apps) {
@@ -92,9 +45,9 @@ for (final app in apps) {
 
 #### Parameter details:
 
-- **`includeSystem`** *(default: false)*: Include pre-installed system apps like Settings, Phone dialer, etc.
-- **`onlyLaunchable`** *(default: true)*: Only return apps that have launcher icons. If `false`, includes all installed packages (libraries, services, background apps).
-- **`includeIcons`** *(default: false)*: Load app icons as bytes. **Warning**: This significantly impacts performance and memory usage.
+- **`includeSystem`**: Include pre-installed system apps like Settings, Phone dialer, etc.
+- **`onlyLaunchable`**: Only return apps that have launcher icons. If `false`, includes all installed packages (libraries, services, background apps).
+- **`includeIcons`**: Load app icons as bytes.
 
 
 ### Get details for one app
@@ -111,40 +64,35 @@ if (info != null) {
 ```dart
 await FlutterDeviceApps.openApp('com.example.myapp');
 await FlutterDeviceApps.openAppSettings('com.example.myapp');
-await FlutterDeviceApps.uninstallApp('com.example.myapp'); // opens system uninstall UI
+await FlutterDeviceApps.uninstallApp('com.example.myapp');
 ```
 
 ### Listen to app changes
 
 ```dart
-// Start monitoring app changes
-await FlutterDeviceApps.startAppChangeStream();
-
+// Start listening to app changes.
 late final StreamSubscription sub;
-sub = FlutterDeviceApps.appChanges.listen((e) {
-  print('App event: ${e.type} → ${e.packageName}');
-  
-  switch (e.type) {
-    case AppChangeType.installed:
-      print('New app installed: ${e.packageName}');
-    case AppChangeType.removed:
-      print('App uninstalled: ${e.packageName}');  
-    case AppChangeType.updated:
-      print('App updated: ${e.packageName}');
-    case null:
-      print('Unknown change type');
-  }
-});
+sub = FlutterDeviceApps.appChanges.listen(
+  (e) {
+    print('App event: ${e.type} → ${e.packageName}');
+    
+    switch (e.type) {
+      case AppChangeType.installed:
+        print('New app installed: ${e.packageName}');
+      case AppChangeType.removed:
+        print('App uninstalled: ${e.packageName}');  
+      case AppChangeType.updated:
+        print('App updated: ${e.packageName}');
+      case null:
+        print('Unknown change type');
+    }
+  },
+  onError: (error) => print('Monitoring error: $error'),
+);
 
-// later - stop monitoring and cancel subscription
+// if needed, stop listening to app changes.
 await sub.cancel();
-await FlutterDeviceApps.stopAppChangeStream();
 ```
-
-#### Event types:
-- `AppChangeType.installed` - New app installed
-- `AppChangeType.removed` - App uninstalled  
-- `AppChangeType.updated` - App updated to new version
 
 ### Get installer store information
 
@@ -157,52 +105,34 @@ if (store != null) {
 
 #### Common installer stores:
 - `"com.android.vending"` - Google Play Store
-- `"com.amazon.venezia"` - Amazon Appstore  
 - `"com.sec.android.app.samsungapps"` - Samsung Galaxy Store
 - `"com.huawei.appmarket"` - Huawei AppGallery
-- `null` - Unknown or sideloaded app
-
-### AppInfo model details
-
-The `AppInfo` class contains these properties:
-
-```dart
-class AppInfo {
-  String? packageName;      // e.g., "com.example.app"
-  String? appName;          // e.g., "My App"
-  String? versionName;      // e.g., "1.2.3" 
-  int? versionCode;         // e.g., 123 (internal version)
-  DateTime? firstInstallTime; // When first installed
-  DateTime? lastUpdateTime;   // When last updated
-  bool? isSystem;           // true for system apps
-  Uint8List? iconBytes;     // PNG icon data (if requested)
-}
-```
+- `...`
 
 ## Android notes
 
-* **Package visibility (Android 11+)**: by default we query **launcher** apps using `<queries>` intent filters. No `QUERY_ALL_PACKAGES` permission is requested.
-* Add this to your app's `AndroidManifest.xml` if not present:
+### Package visibility (Android 11+)
+
+**No extra permissions needed** for basic usage (listing launcher apps and getting app details).
+
+#### If you need to access ALL apps (including system apps):
+
+If you want `listApps()` or `getApp()` to see all installed applications instead of just launchable ones, add this permission to your `AndroidManifest.xml`:
 
 ```xml
-<queries>
-  <intent>
-    <action android:name="android.intent.action.MAIN" />
-    <category android:name="android.intent.category.LAUNCHER" />
-  </intent>
-</queries>
+<uses-permission android:name="android.permission.QUERY_ALL_PACKAGES" />
 ```
 
-* **Uninstall permission**: To use the `uninstallApp()` function, add this permission to your `AndroidManifest.xml`:
+### Uninstall permission
+
+To use the `uninstallApp()` function, add this permission to your `AndroidManifest.xml`:
 
 ```xml
 <uses-permission android:name="android.permission.REQUEST_DELETE_PACKAGES" />
 ```
 
-* **Uninstall behavior**: Opening the system uninstall UI may require the app to have appropriate policy permissions on some OEMs for third‑party packages. We only start the UI; the final result depends on user action and device policy.
-
 ---
 
 ## License
 
-MIT © 2025 okmsbun
+MIT © 2026 okmsbun

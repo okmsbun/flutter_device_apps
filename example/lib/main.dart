@@ -54,9 +54,6 @@ class _AppManagerScreenState extends State<AppManagerScreen> {
   @override
   void dispose() {
     _appChangeSubscription?.cancel();
-    if (_isMonitoring) {
-      FlutterDeviceApps.stopAppChangeStream();
-    }
     super.dispose();
   }
 
@@ -177,23 +174,28 @@ class _AppManagerScreenState extends State<AppManagerScreen> {
     try {
       if (_isMonitoring) {
         await _appChangeSubscription?.cancel();
-        await FlutterDeviceApps.stopAppChangeStream();
         setState(() {
           _isMonitoring = false;
           _statusMessage = 'Stopped monitoring app changes';
         });
       } else {
-        await FlutterDeviceApps.startAppChangeStream();
-        _appChangeSubscription = FlutterDeviceApps.appChanges.listen((event) {
-          final eventText = '${event.type?.name.toUpperCase()} → ${event.packageName}';
-          setState(() {
-            _changeEvents.insert(0, eventText);
-            if (_changeEvents.length > 10) {
-              _changeEvents.removeLast();
-            }
-            _statusMessage = 'App change detected: $eventText';
-          });
-        });
+        _appChangeSubscription = FlutterDeviceApps.appChanges.listen(
+          (event) {
+            final eventText = '${event.type?.name.toUpperCase()} → ${event.packageName}';
+            setState(() {
+              _changeEvents.insert(0, eventText);
+              if (_changeEvents.length > 10) {
+                _changeEvents.removeLast();
+              }
+              _statusMessage = 'App change detected: $eventText';
+            });
+          },
+          onError: (error) {
+            setState(() {
+              _statusMessage = 'Monitoring error: $error';
+            });
+          },
+        );
         setState(() {
           _isMonitoring = true;
           _statusMessage = 'Started monitoring app changes';

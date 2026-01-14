@@ -54,19 +54,17 @@ class FlutterDeviceApps {
   ///
   /// Listen to this stream to receive notifications when apps are installed,
   /// uninstalled, or updated on the device.
+  ///
+  /// The stream automatically starts monitoring when you add the first listener
+  /// and stops when all listeners are removed.
+  ///
+  /// Example:
+  /// ```dart
+  /// FlutterDeviceApps.appChanges.listen((event) {
+  ///   print('App ${event.packageName} was ${event.type}');
+  /// });
+  /// ```
   static Stream<AppChangeEvent> get appChanges => _p.appChanges;
-
-  /// Starts the app change monitoring stream.
-  ///
-  /// Call this method before listening to [appChanges] to begin monitoring
-  /// app installation/uninstallation events.
-  static Future<void> startAppChangeStream() => _p.startAppChangeStream();
-
-  /// Stops the app change monitoring stream.
-  ///
-  /// Call this method to stop monitoring app installation/uninstallation events
-  /// and clean up resources.
-  static Future<void> stopAppChangeStream() => _p.stopAppChangeStream();
 
   /// Opens the app settings for the specified package name.
   ///
