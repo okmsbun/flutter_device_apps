@@ -60,23 +60,23 @@ packages:
       path: ".."
       relative: true
     source: path
-    version: "0.4.0"
+    version: "0.5.1"
   flutter_device_apps_android:
     dependency: transitive
     description:
       name: flutter_device_apps_android
-      sha256: d2c77e32979e4cb7176910d557ca1b1bf155728fcd1e493940549376e6835df4
+      sha256: "562b3abf47904af4042029b33ff1360bf5c2d7e2fdefd49592a40ac857408311"
       url: "https://pub.dev"
     source: hosted
-    version: "0.4.1"
+    version: "0.5.1"
   flutter_device_apps_platform_interface:
     dependency: transitive
     description:
       name: flutter_device_apps_platform_interface
-      sha256: ab3fd0c936016998dceeb422fbd78ce56c151126b87097b8b12c016d1e2138fb
+      sha256: "08df7d98d7cf88f4ba83b558ac720edd23f62731b893ee6c23a5d03a62e9ae56"
       url: "https://pub.dev"
     source: hosted
-    version: "0.4.0"
+    version: "0.5.1"
   flutter_lints:
     dependency: "direct dev"
     description:
