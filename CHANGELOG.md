@@ -1,4 +1,7 @@
 
+## 0.5.1
+- Added new `AppInfo` fields: `category`, `targetSdkVersion`, `minSdkVersion`, `enabled`, `processName`, `installLocation`, `requestedPermissions`.
+
 ## 0.4.0
 - App change events now forward the raw Android action string to Dart, which maps it to AppChangeType without breaking existing API.
 - Modernized event listening: no manual start/stop, just listen to the stream.

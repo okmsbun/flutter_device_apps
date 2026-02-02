@@ -56,8 +56,27 @@ for (final app in apps) {
 final info = await FlutterDeviceApps.getApp('com.example.myapp', includeIcon: true);
 if (info != null) {
   print('Version: ${info.versionName} (${info.versionCode})');
+  print('Category: ${info.category}');
 }
 ```
+
+#### AppInfo fields
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `packageName` | `String?` | Package ID (e.g. `com.example.app`) |
+| `appName` | `String?` | Display name |
+| `versionName` / `versionCode` | `String?` / `int?` | Version info |
+| `firstInstallTime` / `lastUpdateTime` | `DateTime?` | Install/update times |
+| `isSystem` | `bool?` | Whether the app is a system app |
+| `iconBytes` | `Uint8List?` | Icon bytes when requested |
+| `category` | `int?` | App category code (e.g. game/social/productivity). |
+| `targetSdkVersion` | `int?` | App’s target Android SDK level. |
+| `minSdkVersion` | `int?` | Minimum Android SDK level required. |
+| `enabled` | `bool?` | Whether the app is currently enabled. |
+| `processName` | `String?` | Process name the app runs in. |
+| `installLocation` | `int?` | Install preference/location code (auto/internal/external). |
+| `requestedPermissions` | `List<String>?` | Permissions declared in the app manifest. |
 
 ### Open / Settings / Uninstall
 
