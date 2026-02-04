@@ -76,7 +76,17 @@ if (info != null) {
 | `enabled` | `bool?` | Whether the app is currently enabled. |
 | `processName` | `String?` | Process name the app runs in. |
 | `installLocation` | `int?` | Install preference/location code (auto/internal/external). |
-| `requestedPermissions` | `List<String>?` | Permissions declared in the app manifest. |
+
+### Get requested permissions on demand
+
+```dart
+final permissions = await FlutterDeviceApps.getRequestedPermissions('com.example.myapp');
+if (permissions != null) {
+  for (final p in permissions) {
+    print('Permission: $p');
+  }
+}
+```
 
 ### Open / Settings / Uninstall
 

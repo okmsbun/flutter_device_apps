@@ -43,6 +43,14 @@ class FlutterDeviceApps {
   static Future<AppInfo?> getApp(String packageName, {bool includeIcon = false}) =>
       _p.getApp(packageName, includeIcon: includeIcon);
 
+  /// Gets the requested permissions for a specific app.
+  ///
+  /// [packageName] - The package name of the app to retrieve permissions for
+  ///
+  /// Returns a Future that resolves to a list of requested permissions, or null if not available.
+  static Future<List<String>?> getRequestedPermissions(String packageName) =>
+      _p.getRequestedPermissions(packageName);
+
   /// Opens an app with the specified package name.
   ///
   /// [packageName] - The package name of the app to open
