@@ -36,6 +36,7 @@ class _AppManagerScreenState extends State<AppManagerScreen> {
   bool _loading = false;
   String _statusMessage = '';
   AppInfo? _selectedApp;
+  List<String>? _selectedAppPermissions;
   StreamSubscription<AppChangeEvent>? _appChangeSubscription;
   bool _isMonitoring = false;
   final List<String> _changeEvents = [];
@@ -89,6 +90,7 @@ class _AppManagerScreenState extends State<AppManagerScreen> {
     setState(() {
       _loading = true;
       _statusMessage = 'Loading app details...';
+      _selectedAppPermissions = null; // Clear previous permissions
     });
 
     try {
@@ -98,6 +100,8 @@ class _AppManagerScreenState extends State<AppManagerScreen> {
           _selectedApp = app;
           _statusMessage = 'App details loaded';
         });
+        // Load permissions automatically
+        _getRequestedPermissions(packageName);
       } else {
         setState(() {
           _statusMessage = 'App not found';
@@ -170,6 +174,23 @@ class _AppManagerScreenState extends State<AppManagerScreen> {
     }
   }
 
+  Future<void> _getRequestedPermissions(String packageName) async {
+    try {
+      final permissions = await FlutterDeviceApps.getRequestedPermissions(packageName);
+      setState(() {
+        _selectedAppPermissions = permissions;
+        _statusMessage = permissions != null
+            ? 'Found ${permissions.length} permissions'
+            : 'No permissions info available';
+      });
+    } catch (e) {
+      setState(() {
+        _statusMessage = 'Error getting permissions: $e';
+        _selectedAppPermissions = null;
+      });
+    }
+  }
+
   Future<void> _toggleAppMonitoring() async {
     try {
       if (_isMonitoring) {
@@ -224,6 +245,35 @@ class _AppManagerScreenState extends State<AppManagerScreen> {
     };
 
     return storeNames[store] ?? store;
+  }
+
+  String _getCategoryName(int? category) {
+    if (category == null) return 'N/A';
+
+    // Android ApplicationInfo category constants (API 26+)
+    const categories = {
+      -1: 'Undefined', // CATEGORY_UNDEFINED
+      0: 'Game', // CATEGORY_GAME
+      1: 'Audio', // CATEGORY_AUDIO
+      2: 'Video', // CATEGORY_VIDEO
+      3: 'Image', // CATEGORY_IMAGE
+      4: 'Social', // CATEGORY_SOCIAL
+      5: 'News', // CATEGORY_NEWS
+      6: 'Maps', // CATEGORY_MAPS
+      7: 'Productivity', // CATEGORY_PRODUCTIVITY
+      8: 'Accessibility', // CATEGORY_ACCESSIBILITY (API 31+)
+    };
+
+    return categories[category] ?? 'Unknown ($category)';
+  }
+
+  String _getInstallLocationName(int? location) {
+    if (location == null) return 'N/A';
+
+    // Android PackageInfo installLocation constants
+    const locations = {-1: 'Auto', 0: 'Internal Only', 1: 'Prefer External', 2: 'Internal'};
+
+    return locations[location] ?? 'Unknown ($location)';
   }
 
   @override
@@ -347,9 +397,9 @@ class _AppManagerScreenState extends State<AppManagerScreen> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         // App list
-        Expanded(flex: 2, child: _buildAppList()),
+        Expanded(flex: 4, child: _buildAppList()),
         // App details
-        Expanded(flex: 2, child: _buildAppDetails()),
+        Expanded(flex: 6, child: _buildAppDetails()),
       ],
     );
   }
@@ -376,25 +426,23 @@ class _AppManagerScreenState extends State<AppManagerScreen> {
                   leading: app.iconBytes != null
                       ? Image.memory(
                           app.iconBytes!,
-                          width: 32,
-                          height: 32,
+                          width: 28,
+                          height: 28,
                           errorBuilder: (context, error, stackTrace) =>
-                              const Icon(Icons.android, size: 32),
+                              const Icon(Icons.android, size: 28),
                         )
-                      : const Icon(Icons.android, size: 32),
+                      : const Icon(Icons.android, size: 28),
+                  contentPadding: EdgeInsets.zero,
                   title: Text(
                     app.appName ?? 'Unknown',
-                    style: const TextStyle(fontSize: 14),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                   ),
                   subtitle: Text(
                     app.packageName ?? '',
-                    style: const TextStyle(fontSize: 12),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                   ),
-                  trailing: app.isSystem == true ? const Icon(Icons.settings, size: 16) : null,
                   onTap: () => _getAppDetails(app.packageName ?? ''),
                   dense: true,
                 );
@@ -417,7 +465,7 @@ class _AppManagerScreenState extends State<AppManagerScreen> {
               ),
             )
           : SingleChildScrollView(
-              padding: const EdgeInsets.all(16.0),
+              padding: const EdgeInsets.all(8.0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -465,6 +513,27 @@ class _AppManagerScreenState extends State<AppManagerScreen> {
                   _buildDetailRow('First Install', _formatDateTime(_selectedApp!.firstInstallTime)),
                   _buildDetailRow('Last Update', _formatDateTime(_selectedApp!.lastUpdateTime)),
                   _buildDetailRow('System App', _selectedApp!.isSystem == true ? 'Yes' : 'No'),
+                  _buildDetailRow(
+                    'Enabled',
+                    _selectedApp!.enabled == true
+                        ? 'Yes'
+                        : _selectedApp!.enabled == false
+                        ? 'No'
+                        : 'N/A',
+                  ),
+                  const SizedBox(height: 8),
+
+                  _buildDetailRow('Category', _getCategoryName(_selectedApp!.category)),
+                  _buildDetailRow(
+                    'Target SDK',
+                    _selectedApp!.targetSdkVersion?.toString() ?? 'N/A',
+                  ),
+                  _buildDetailRow('Min SDK', _selectedApp!.minSdkVersion?.toString() ?? 'N/A'),
+                  _buildDetailRow('Process Name', _selectedApp!.processName ?? 'N/A'),
+                  _buildDetailRow(
+                    'Install Location',
+                    _getInstallLocationName(_selectedApp!.installLocation),
+                  ),
 
                   const SizedBox(height: 16),
 
@@ -499,6 +568,65 @@ class _AppManagerScreenState extends State<AppManagerScreen> {
                       ),
                     ],
                   ),
+
+                  // Permissions section
+                  if (_selectedAppPermissions != null) ...[
+                    const SizedBox(height: 16),
+                    Row(
+                      children: [
+                        Flexible(
+                          child: Text(
+                            'Requested Permissions (${_selectedAppPermissions!.length})',
+                            style: Theme.of(context).textTheme.titleMedium,
+                          ),
+                        ),
+                        const SizedBox(width: 8),
+                        IconButton(
+                          icon: const Icon(Icons.refresh, size: 18),
+                          onPressed: () => _getRequestedPermissions(_selectedApp!.packageName!),
+                          tooltip: 'Refresh permissions',
+                          padding: EdgeInsets.zero,
+                          constraints: const BoxConstraints(),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 8),
+                    if (_selectedAppPermissions!.isEmpty)
+                      const Text(
+                        'No permissions requested',
+                        style: TextStyle(fontStyle: FontStyle.italic),
+                      )
+                    else
+                      Container(
+                        constraints: const BoxConstraints(maxHeight: 400),
+                        decoration: BoxDecoration(
+                          border: Border.all(color: Colors.grey.shade300),
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: ListView.builder(
+                          shrinkWrap: true,
+                          itemCount: _selectedAppPermissions!.length,
+                          itemBuilder: (context, index) {
+                            final permission = _selectedAppPermissions![index];
+                            final shortName = permission.split('.').last;
+                            return ListTile(
+                              contentPadding: EdgeInsets.all(2),
+                              dense: true,
+                              title: Text(
+                                shortName,
+                                style: const TextStyle(fontSize: 13, fontWeight: FontWeight.bold),
+                              ),
+                              subtitle: Text(
+                                permission,
+                                style: const TextStyle(fontSize: 11),
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            );
+                          },
+                        ),
+                      ),
+                  ],
                 ],
               ),
             ),

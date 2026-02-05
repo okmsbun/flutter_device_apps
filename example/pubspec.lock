@@ -60,31 +60,31 @@ packages:
       path: ".."
       relative: true
     source: path
-    version: "0.5.1"
+    version: "0.6.0"
   flutter_device_apps_android:
     dependency: transitive
     description:
       name: flutter_device_apps_android
-      sha256: "562b3abf47904af4042029b33ff1360bf5c2d7e2fdefd49592a40ac857408311"
+      sha256: "23ee222ec24221cb997996d12b6a4e6c925c1dd6b69be36605d25186a9ec24dc"
       url: "https://pub.dev"
     source: hosted
-    version: "0.5.1"
+    version: "0.6.0"
   flutter_device_apps_platform_interface:
     dependency: transitive
     description:
       name: flutter_device_apps_platform_interface
-      sha256: "08df7d98d7cf88f4ba83b558ac720edd23f62731b893ee6c23a5d03a62e9ae56"
+      sha256: "7d56bba5952186dee83665f080b547b975b39cde1a49f0d0d344f96de5d9ac84"
       url: "https://pub.dev"
     source: hosted
-    version: "0.5.1"
+    version: "0.6.0"
   flutter_lints:
     dependency: "direct dev"
     description:
       name: flutter_lints
-      sha256: "5398f14efa795ffb7a33e9b6a08798b26a180edac4ad7db3f231e40f82ce11e1"
+      sha256: "3105dc8492f6183fb076ccf1f351ac3d60564bff92e20bfc4af9cc1651f4e7e1"
       url: "https://pub.dev"
     source: hosted
-    version: "5.0.0"
+    version: "6.0.0"
   flutter_test:
     dependency: "direct dev"
     description: flutter
@@ -118,10 +118,10 @@ packages:
     dependency: transitive
     description:
       name: lints
-      sha256: c35bb79562d980e9a453fc715854e1ed39e24e7d0297a880ef54e17f9874a9d7
+      sha256: "12f842a479589fea194fe5c5a3095abc7be0c1f2ddfa9a0e76aed1dbd26a87df"
       url: "https://pub.dev"
     source: hosted
-    version: "5.1.1"
+    version: "6.1.0"
   matcher:
     dependency: transitive
     description:
