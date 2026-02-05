@@ -62,21 +62,28 @@ if (info != null) {
 
 #### AppInfo fields
 
-| Field | Type | Description |
-|-------|------|-------------|
-| `packageName` | `String?` | Package ID (e.g. `com.example.app`) |
-| `appName` | `String?` | Display name |
-| `versionName` / `versionCode` | `String?` / `int?` | Version info |
-| `firstInstallTime` / `lastUpdateTime` | `DateTime?` | Install/update times |
-| `isSystem` | `bool?` | Whether the app is a system app |
-| `iconBytes` | `Uint8List?` | Icon bytes when requested |
-| `category` | `int?` | App category code (e.g. game/social/productivity). |
-| `targetSdkVersion` | `int?` | App’s target Android SDK level. |
-| `minSdkVersion` | `int?` | Minimum Android SDK level required. |
-| `enabled` | `bool?` | Whether the app is currently enabled. |
-| `processName` | `String?` | Process name the app runs in. |
-| `installLocation` | `int?` | Install preference/location code (auto/internal/external). |
-| `requestedPermissions` | `List<String>?` | Permissions declared in the app manifest. |
+Most common fields you’ll use (all fields, grouped):
+
+- `packageName`, `appName` – App identity (e.g. `com.example.app`, display name)
+- `versionName`, `versionCode` – Version info
+- `firstInstallTime`, `lastUpdateTime` – Install / update times
+- `isSystem`, `enabled` – System app & enabled state
+- `iconBytes` – Icon bytes (when requested)
+- `category` – App category code (e.g. game / social / productivity)
+- `targetSdkVersion`, `minSdkVersion` – Target & minimum Android SDK levels
+- `processName` – Process name the app runs in
+- `installLocation` – Install preference/location (auto / internal / external)
+
+### Get requested permissions on demand
+
+```dart
+final permissions = await FlutterDeviceApps.getRequestedPermissions('com.example.myapp');
+if (permissions != null) {
+  for (final p in permissions) {
+    print('Permission: $p');
+  }
+}
+```
 
 ### Open / Settings / Uninstall
 

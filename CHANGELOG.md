@@ -1,3 +1,13 @@
+## 0.6.0
+- **BREAKING**: Removed `requestedPermissions` field from `AppInfo` class to improve performance
+- Added new API: `getRequestedPermissions(String packageName)` for on-demand permission retrieval
+- This change allows fetching permissions only when needed, reducing memory usage and improving app list performance
+- Added GitHub Actions workflows for automated PR validation and code quality checks:
+  - `quality.yml`: Validates code formatting, static analysis, and pub.dev publish readiness
+  - `only-develop-to-main.yml`: Enforces branch protection (only develop → main PRs allowed)
+- Updated dependencies: flutter_device_apps_android ^0.6.0 and flutter_device_apps_platform_interface ^0.6.0
+- Enhanced README.md with consolidated and clarified AppInfo field descriptions
+- Improved documentation for on-demand permission retrieval with code examples
 
 ## 0.5.1
 - Added new `AppInfo` fields: `category`, `targetSdkVersion`, `minSdkVersion`, `enabled`, `processName`, `installLocation`, `requestedPermissions`.

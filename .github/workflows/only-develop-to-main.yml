@@ -1,0 +1,18 @@
+name: only-develop-to-main
+
+on:
+  pull_request:
+    branches: ["main"]
+
+jobs:
+  only-develop-to-main:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Allow only develop -> main PRs
+        run: |
+          echo "head_ref: ${{ github.head_ref }}"
+          echo "base_ref: ${{ github.base_ref }}"
+          if [ "${{ github.base_ref }}" = "main" ] && [ "${{ github.head_ref }}" != "develop" ]; then
+            echo "Only PRs from 'develop' to 'main' are allowed."
+            exit 1
+          fi
