@@ -510,6 +510,7 @@ class _AppManagerScreenState extends State<AppManagerScreen> {
                     'Version',
                     '${_selectedApp!.versionName ?? 'N/A'} (${_selectedApp!.versionCode ?? 'N/A'})',
                   ),
+                  _buildDetailRow('UID', _selectedApp!.uid?.toString() ?? 'N/A'),
                   _buildDetailRow('First Install', _formatDateTime(_selectedApp!.firstInstallTime)),
                   _buildDetailRow('Last Update', _formatDateTime(_selectedApp!.lastUpdateTime)),
                   _buildDetailRow('System App', _selectedApp!.isSystem == true ? 'Yes' : 'No'),
