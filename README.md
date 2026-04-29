@@ -71,7 +71,10 @@ Most common fields you’ll use (all fields, grouped):
 - `category` – App category code (e.g. game / social / productivity)
 - `targetSdkVersion`, `minSdkVersion` – Target & minimum Android SDK levels
 - `processName` – Process name the app runs in
-- `installLocation` – Install preference/location (auto / internal / external)
+- `apkPath` – Base APK file path (`ApplicationInfo.sourceDir`)
+- `dataPath` – App private data path (`ApplicationInfo.dataDir`)
+- `isOnExternalStorage` – Raw boolean from `ApplicationInfo.FLAG_EXTERNAL_STORAGE`
+- `installLocation` – Requested install policy (`auto` / `internalOnly` / `preferExternal`)
 
 ### Get requested permissions on demand
 

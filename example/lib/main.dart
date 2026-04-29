@@ -271,7 +271,7 @@ class _AppManagerScreenState extends State<AppManagerScreen> {
     if (location == null) return 'N/A';
 
     // Android PackageInfo installLocation constants
-    const locations = {-1: 'Auto', 0: 'Internal Only', 1: 'Prefer External', 2: 'Internal'};
+    const locations = {0: 'Auto', 1: 'Internal Only', 2: 'Prefer External'};
 
     return locations[location] ?? 'Unknown ($location)';
   }
@@ -532,9 +532,15 @@ class _AppManagerScreenState extends State<AppManagerScreen> {
                   _buildDetailRow('Min SDK', _selectedApp!.minSdkVersion?.toString() ?? 'N/A'),
                   _buildDetailRow('Process Name', _selectedApp!.processName ?? 'N/A'),
                   _buildDetailRow(
-                    'Install Location',
+                    'Install Location (Requested)',
                     _getInstallLocationName(_selectedApp!.installLocation),
                   ),
+                  _buildDetailRow(
+                    'On External Storage (FLAG_EXTERNAL_STORAGE)',
+                    _selectedApp!.isOnExternalStorage?.toString() ?? 'N/A',
+                  ),
+                  _buildDetailRow('APK Path', _selectedApp!.apkPath ?? 'N/A'),
+                  _buildDetailRow('Data Path', _selectedApp!.dataPath ?? 'N/A'),
 
                   const SizedBox(height: 16),
 
@@ -638,7 +644,7 @@ class _AppManagerScreenState extends State<AppManagerScreen> {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 4.0),
       child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           SizedBox(
             width: 100,
