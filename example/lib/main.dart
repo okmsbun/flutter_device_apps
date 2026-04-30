@@ -234,6 +234,21 @@ class _AppManagerScreenState extends State<AppManagerScreen> {
     return '${dateTime.day}/${dateTime.month}/${dateTime.year} ${dateTime.hour}:${dateTime.minute.toString().padLeft(2, '0')}';
   }
 
+  String _formatBytes(int? bytes) {
+    if (bytes == null) return 'N/A';
+    const units = ['B', 'KB', 'MB', 'GB', 'TB'];
+    double value = bytes.toDouble();
+    int unitIndex = 0;
+
+    while (value >= 1024 && unitIndex < units.length - 1) {
+      value /= 1024;
+      unitIndex++;
+    }
+
+    final display = unitIndex == 0 ? value.toStringAsFixed(0) : value.toStringAsFixed(2);
+    return '$display ${units[unitIndex]} ($bytes bytes)';
+  }
+
   String _getStoreDisplayName(String? store) {
     if (store == null) return 'Unknown/Sideloaded';
 
@@ -540,6 +555,7 @@ class _AppManagerScreenState extends State<AppManagerScreen> {
                     _selectedApp!.isOnExternalStorage?.toString() ?? 'N/A',
                   ),
                   _buildDetailRow('APK Path', _selectedApp!.apkPath ?? 'N/A'),
+                  _buildDetailRow('APK Size', _formatBytes(_selectedApp!.apkSizeBytes)),
                   _buildDetailRow('Data Path', _selectedApp!.dataPath ?? 'N/A'),
 
                   const SizedBox(height: 16),

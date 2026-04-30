@@ -72,6 +72,7 @@ Most common fields you’ll use (all fields, grouped):
 - `targetSdkVersion`, `minSdkVersion` – Target & minimum Android SDK levels
 - `processName` – Process name the app runs in
 - `apkPath` – Base APK file path (`ApplicationInfo.sourceDir`)
+- `apkSizeBytes` – APK size in bytes (base + installed split APK files, may be `null`)
 - `dataPath` – App private data path (`ApplicationInfo.dataDir`)
 - `isOnExternalStorage` – Raw boolean from `ApplicationInfo.FLAG_EXTERNAL_STORAGE`
 - `installLocation` – Requested install policy (`auto` / `internalOnly` / `preferExternal`)
