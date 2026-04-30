@@ -1,4 +1,4 @@
-# flutter\_device\_apps
+# flutter_device_apps
 
 <p align="center">
 <a href="https://pub.dev/packages/flutter_device_apps"><img src="https://img.shields.io/pub/v/flutter_device_apps.svg?color=0175C2" alt="Pub"></a>
@@ -49,14 +49,12 @@ for (final app in apps) {
 - **`onlyLaunchable`**: Only return apps that have launcher icons. If `false`, includes all installed packages (libraries, services, background apps).
 - **`includeIcons`**: Load app icons as bytes.
 
-
 ### Get details for one app
 
 ```dart
 final info = await FlutterDeviceApps.getApp('com.example.myapp', includeIcon: true);
 if (info != null) {
   print('Version: ${info.versionName} (${info.versionCode})');
-  print('Category: ${info.category}');
 }
 ```
 
@@ -66,13 +64,18 @@ Most common fields you’ll use (all fields, grouped):
 
 - `packageName`, `appName` – App identity (e.g. `com.example.app`, display name)
 - `versionName`, `versionCode` – Version info
+- `uid` – Linux app UID (local metadata; can differ by user profile and device)
 - `firstInstallTime`, `lastUpdateTime` – Install / update times
 - `isSystem`, `enabled` – System app & enabled state
 - `iconBytes` – Icon bytes (when requested)
 - `category` – App category code (e.g. game / social / productivity)
 - `targetSdkVersion`, `minSdkVersion` – Target & minimum Android SDK levels
 - `processName` – Process name the app runs in
-- `installLocation` – Install preference/location (auto / internal / external)
+- `apkPath` – Base APK file path (`ApplicationInfo.sourceDir`)
+- `apkSizeBytes` – APK size in bytes (base + installed split APK files, may be `null`)
+- `dataPath` – App private data path (`ApplicationInfo.dataDir`)
+- `isOnExternalStorage` – Raw boolean from `ApplicationInfo.FLAG_EXTERNAL_STORAGE`
+- `installLocation` – Requested install policy (`auto` / `internalOnly` / `preferExternal`)
 
 ### Get requested permissions on demand
 
@@ -101,12 +104,12 @@ late final StreamSubscription sub;
 sub = FlutterDeviceApps.appChanges.listen(
   (e) {
     print('App event: ${e.type} → ${e.packageName}');
-    
+
     switch (e.type) {
       case AppChangeType.installed:
         print('New app installed: ${e.packageName}');
       case AppChangeType.removed:
-        print('App uninstalled: ${e.packageName}');  
+        print('App uninstalled: ${e.packageName}');
       case AppChangeType.updated:
         print('App updated: ${e.packageName}');
       case null:
@@ -130,6 +133,7 @@ if (store != null) {
 ```
 
 #### Common installer stores:
+
 - `"com.android.vending"` - Google Play Store
 - `"com.sec.android.app.samsungapps"` - Samsung Galaxy Store
 - `"com.huawei.appmarket"` - Huawei AppGallery

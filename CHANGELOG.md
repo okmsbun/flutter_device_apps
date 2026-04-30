@@ -1,4 +1,11 @@
+## 0.7.0
+
+- Updated federated dependencies to `flutter_device_apps_android ^0.7.0` and `flutter_device_apps_platform_interface ^0.7.0`.
+- Expanded available `AppInfo` metadata via platform packages: `uid`, `apkPath`, `apkSizeBytes`, `dataPath`, and `isOnExternalStorage`.
+- Updated README.md to document the new raw metadata fields and clarify install location semantics.
+
 ## 0.6.0
+
 - **BREAKING**: Removed `requestedPermissions` field from `AppInfo` class to improve performance
 - Added new API: `getRequestedPermissions(String packageName)` for on-demand permission retrieval
 - This change allows fetching permissions only when needed, reducing memory usage and improving app list performance
@@ -10,20 +17,25 @@
 - Improved documentation for on-demand permission retrieval with code examples
 
 ## 0.5.1
+
 - Added new `AppInfo` fields: `category`, `targetSdkVersion`, `minSdkVersion`, `enabled`, `processName`, `installLocation`, `requestedPermissions`.
 
 ## 0.4.0
+
 - App change events now forward the raw Android action string to Dart, which maps it to AppChangeType without breaking existing API.
 - Modernized event listening: no manual start/stop, just listen to the stream.
 
 ## 0.3.1
+
 - Fixed screenshot URLs in README for proper display on pub.dev
 
 ## 0.3.0
+
 - Added comprehensive example app with improved UI, real-time monitoring, and pre-configured AndroidManifest
 - Added 6 professional screenshots in 2x3 grid layout to README
 
 ## 0.2.0
+
 - Enhanced README.md with professional badge layout for improved package visibility
 - Added centered HTML badges for pub.dev version, GitHub stars, Flutter documentation, MIT license, and source repository
 - Improved documentation presentation following modern Flutter package standards
@@ -32,6 +44,7 @@
 - Added GitHub repository badge with direct link to source code for better developer engagement
 
 ## 0.1.2
+
 - **BREAKING**: Simplified `AppChangeEvent` types - removed `enabled`/`disabled` (were not implemented)
 - Added `openAppSettings(String packageName)` API to open system app settings screen
 - Added `uninstallApp(String packageName)` API to trigger system uninstall UI
@@ -43,6 +56,7 @@
 - Added troubleshooting section for common issues
 
 ## 0.1.0
+
 - First public release of `flutter_device_apps` (umbrella package)
 - Provides app-facing API: listApps, getApp, openApp, appChanges
 - Android supported via flutter_device_apps_android
