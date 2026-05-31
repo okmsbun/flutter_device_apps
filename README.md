@@ -24,7 +24,8 @@ import 'package:flutter_device_apps/flutter_device_apps.dart';
 final apps = await FlutterDeviceApps.listApps(
   // Include pre-installed system apps like Settings, Phone dialer, etc.
   includeSystem: false,
-  // Only return apps that have launcher icons. If false, includes all installed packages (libraries, services, background apps).
+  // Only return apps that have launcher icons.
+  // If false, includes all installed packages (libraries, services, background apps).
   onlyLaunchable: true,
   // Load app icons as bytes (can be expensive, so optional).
   includeIcons: false,
