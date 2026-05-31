@@ -22,27 +22,22 @@ A Flutter plugin to **list**, **inspect**, and **interact with installed apps** 
 import 'package:flutter_device_apps/flutter_device_apps.dart';
 
 final apps = await FlutterDeviceApps.listApps(
+  // Include pre-installed system apps like Settings, Phone dialer, etc.
   includeSystem: false,
+  // Only return apps that have launcher icons. If false, includes all installed packages (libraries, services, background apps).
   onlyLaunchable: true,
+  // Load app icons as bytes (can be expensive, so optional).
   includeIcons: false,
 );
 ```
 
-#### Parameter details:
-
-- **`includeSystem`**: Include pre-installed system apps like Settings, Phone dialer, etc.
-- **`onlyLaunchable`**: Only return apps that have launcher icons. If `false`, includes all installed packages (libraries, services, background apps).
-- **`includeIcons`**: Load app icons as bytes.
-
 ### Get details for one app
 
 ```dart
-final info = await FlutterDeviceApps.getApp('com.example.myapp', includeIcon: true);
+final appInfo = await FlutterDeviceApps.getApp('com.example.myapp', includeIcon: true);
 ```
 
 #### AppInfo fields
-
-Most common fields you’ll use (all fields, grouped):
 
 - `packageName`, `appName` – App identity (e.g. `com.example.app`, display name)
 - `versionName`, `versionCode` – Version info
