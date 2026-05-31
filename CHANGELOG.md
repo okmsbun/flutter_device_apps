@@ -1,3 +1,9 @@
+## 0.8.0
+
+- Updates the endorsed Android implementation to `flutter_device_apps_android` 0.8.0.
+- Includes Android Gradle Plugin 9 / built-in Kotlin compatibility through the Android implementation package.
+- Keeps compatibility with existing AGP 8.x projects by continuing to support the Kotlin Gradle Plugin path where required.
+
 ## 0.7.0
 
 - Updated federated dependencies to `flutter_device_apps_android ^0.7.0` and `flutter_device_apps_platform_interface ^0.7.0`.
