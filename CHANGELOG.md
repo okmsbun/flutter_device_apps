@@ -1,3 +1,7 @@
+## 0.8.1
+
+- Updated README.md.
+
 ## 0.8.0
 
 - Updates the endorsed Android implementation to `flutter_device_apps_android` 0.8.0.
