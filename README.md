@@ -14,17 +14,6 @@ A Flutter plugin to **list**, **inspect**, and **interact with installed apps** 
 
 ---
 
-## Install
-
-Add to your `pubspec.yaml`:
-
-```yaml
-dependencies:
-  flutter_device_apps: latest_version
-```
-
----
-
 ## Quick start
 
 ### List apps
@@ -33,34 +22,22 @@ dependencies:
 import 'package:flutter_device_apps/flutter_device_apps.dart';
 
 final apps = await FlutterDeviceApps.listApps(
+  // Include pre-installed system apps like Settings, Phone dialer, etc.
   includeSystem: false,
+  // Only return apps that have launcher icons. If false, includes all installed packages (libraries, services, background apps).
   onlyLaunchable: true,
+  // Load app icons as bytes (can be expensive, so optional).
   includeIcons: false,
 );
-
-for (final app in apps) {
-  print('${app.appName}  •  ${app.packageName}');
-}
 ```
-
-#### Parameter details:
-
-- **`includeSystem`**: Include pre-installed system apps like Settings, Phone dialer, etc.
-- **`onlyLaunchable`**: Only return apps that have launcher icons. If `false`, includes all installed packages (libraries, services, background apps).
-- **`includeIcons`**: Load app icons as bytes.
 
 ### Get details for one app
 
 ```dart
-final info = await FlutterDeviceApps.getApp('com.example.myapp', includeIcon: true);
-if (info != null) {
-  print('Version: ${info.versionName} (${info.versionCode})');
-}
+final appInfo = await FlutterDeviceApps.getApp('com.example.myapp', includeIcon: true);
 ```
 
 #### AppInfo fields
-
-Most common fields you’ll use (all fields, grouped):
 
 - `packageName`, `appName` – App identity (e.g. `com.example.app`, display name)
 - `versionName`, `versionCode` – Version info
@@ -81,11 +58,6 @@ Most common fields you’ll use (all fields, grouped):
 
 ```dart
 final permissions = await FlutterDeviceApps.getRequestedPermissions('com.example.myapp');
-if (permissions != null) {
-  for (final p in permissions) {
-    print('Permission: $p');
-  }
-}
 ```
 
 ### Open / Settings / Uninstall
@@ -127,16 +99,12 @@ await sub.cancel();
 
 ```dart
 final store = await FlutterDeviceApps.getInstallerStore('com.example.myapp');
-if (store != null) {
-  print('Installed from: $store');
-}
 ```
 
 #### Common installer stores:
 
 - `"com.android.vending"` - Google Play Store
 - `"com.sec.android.app.samsungapps"` - Samsung Galaxy Store
-- `"com.huawei.appmarket"` - Huawei AppGallery
 - `...`
 
 ## Android notes
