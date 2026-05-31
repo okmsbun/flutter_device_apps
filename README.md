@@ -14,17 +14,6 @@ A Flutter plugin to **list**, **inspect**, and **interact with installed apps** 
 
 ---
 
-## Install
-
-Add to your `pubspec.yaml`:
-
-```yaml
-dependencies:
-  flutter_device_apps: latest_version
-```
-
----
-
 ## Quick start
 
 ### List apps
@@ -37,10 +26,6 @@ final apps = await FlutterDeviceApps.listApps(
   onlyLaunchable: true,
   includeIcons: false,
 );
-
-for (final app in apps) {
-  print('${app.appName}  •  ${app.packageName}');
-}
 ```
 
 #### Parameter details:
@@ -53,9 +38,6 @@ for (final app in apps) {
 
 ```dart
 final info = await FlutterDeviceApps.getApp('com.example.myapp', includeIcon: true);
-if (info != null) {
-  print('Version: ${info.versionName} (${info.versionCode})');
-}
 ```
 
 #### AppInfo fields
@@ -81,11 +63,6 @@ Most common fields you’ll use (all fields, grouped):
 
 ```dart
 final permissions = await FlutterDeviceApps.getRequestedPermissions('com.example.myapp');
-if (permissions != null) {
-  for (final p in permissions) {
-    print('Permission: $p');
-  }
-}
 ```
 
 ### Open / Settings / Uninstall
@@ -127,16 +104,12 @@ await sub.cancel();
 
 ```dart
 final store = await FlutterDeviceApps.getInstallerStore('com.example.myapp');
-if (store != null) {
-  print('Installed from: $store');
-}
 ```
 
 #### Common installer stores:
 
 - `"com.android.vending"` - Google Play Store
 - `"com.sec.android.app.samsungapps"` - Samsung Galaxy Store
-- `"com.huawei.appmarket"` - Huawei AppGallery
 - `...`
 
 ## Android notes
