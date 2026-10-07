@@ -1,10 +1,12 @@
+import 'dart:typed_data';
+
 import 'package:flutter_device_apps_platform_interface/flutter_device_apps_app_change_event.dart';
 import 'package:flutter_device_apps_platform_interface/flutter_device_apps_platform_interface.dart';
 
 export 'package:flutter_device_apps_platform_interface/flutter_device_apps_app_change_event.dart'
     show AppChangeEvent, AppChangeType;
 export 'package:flutter_device_apps_platform_interface/flutter_device_apps_platform_interface.dart'
-    show AppInfo;
+    show AppInfo, AppInstallSourceInfo;
 
 /// Flutter plugin for listing/inspecting installed apps on Android and iOS devices.
 ///
@@ -42,6 +44,24 @@ class FlutterDeviceApps {
   /// Returns a Future that resolves to an [AppInfo] object if found, null otherwise.
   static Future<AppInfo?> getApp(String packageName, {bool includeIcon = false}) =>
       _p.getApp(packageName, includeIcon: includeIcon);
+
+  /// Gets the app icon as PNG bytes without loading the full app metadata.
+  ///
+  /// Returns null when the package is missing, not visible, or its icon resources
+  /// cannot be loaded. Returns Android's default icon if no icon is defined.
+  static Future<Uint8List?> getAppIcon(String packageName) => _p.getAppIcon(packageName);
+
+  /// Whether [packageName] is installed and visible to the calling app.
+  ///
+  /// Includes disabled apps and apps without a launcher entry. Returns false
+  /// when the package is missing or hidden by Android package visibility rules.
+  static Future<bool> isAppInstalled(String packageName) => _p.isAppInstalled(packageName);
+
+  /// Whether [packageName] is a system app, using the same flag as [AppInfo.isSystem].
+  ///
+  /// Returns null when the package is missing or hidden by Android package
+  /// visibility rules. Includes disabled apps and apps without a launcher entry.
+  static Future<bool?> isSystemApp(String packageName) => _p.isSystemApp(packageName);
 
   /// Gets the requested permissions for a specific app.
   ///
@@ -88,10 +108,19 @@ class FlutterDeviceApps {
   /// Returns a Future that resolves to true if the app was successfully uninstalled, false otherwise.
   static Future<bool> uninstallApp(String packageName) => _p.uninstallApp(packageName);
 
+  /// Gets installation source information without loading full app metadata.
+  ///
+  /// Returns null when the package is missing or not visible. On Android before
+  /// API 30, only installingPackageName is available. A returned model can have
+  /// null fields when Android does not provide the corresponding information.
+  static Future<AppInstallSourceInfo?> getInstallSourceInfo(String packageName) =>
+      _p.getInstallSourceInfo(packageName);
+
   /// Gets the installer store for the specified package name.
   ///
   /// [packageName] - The package name of the app to get the installer store for
   ///
   /// Returns a Future that resolves to the installer store name or null if not available.
+  @Deprecated('Use getInstallSourceInfo() and its installingPackageName instead.')
   static Future<String?> getInstallerStore(String packageName) => _p.getInstallerStore(packageName);
 }

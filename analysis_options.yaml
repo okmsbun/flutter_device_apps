@@ -240,3 +240,6 @@ linter:
     omit_obvious_local_variable_types: false
     unintended_html_in_doc_comment: false
     omit_obvious_property_types: false
+analyzer:
+  exclude:
+    - build/**

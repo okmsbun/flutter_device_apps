@@ -161,7 +161,9 @@ class _AppManagerScreenState extends State<AppManagerScreen> {
 
   Future<void> _getInstallerStore(String packageName) async {
     try {
-      final store = await FlutterDeviceApps.getInstallerStore(packageName);
+      final store = (await FlutterDeviceApps.getInstallSourceInfo(
+        packageName,
+      ))?.installingPackageName;
       setState(() {
         _statusMessage = store != null
             ? 'Installer: ${_getStoreDisplayName(store)}'
