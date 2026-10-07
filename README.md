@@ -39,6 +39,9 @@ final appInfo = await FlutterDeviceApps.getApp('com.example.myapp', includeIcon:
 - Icon: `iconBytes` (when requested)
 - Android codes: `category`, `installLocation` (raw integers)
 
+`minSdkVersion` describes the installed APK variant and may differ from the original
+app bundle's minimum SDK, including for Google Play installs.
+
 Fields are nullable. See the [AppInfo API](https://pub.dev/documentation/flutter_device_apps_platform_interface/latest/flutter_device_apps_platform_interface/AppInfo-class.html) for details.
 
 ### Get requested permissions on demand
