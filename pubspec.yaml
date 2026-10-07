@@ -1,15 +1,14 @@
 name: flutter_device_apps
 description: App-facing API for listing/inspecting installed apps (federated).
 version: 1.0.0
-publish_to: none
 
 repository: https://github.com/okmsbun/flutter_device_apps
 issue_tracker: https://github.com/okmsbun/flutter_device_apps/issues
 topics:
   - flutter
-  - plugin
-  - app-management
+  - android
   - installed-apps
+  - app-management
   - package-manager
 
 environment:
@@ -19,10 +18,8 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  flutter_device_apps_android:
-    path: ../flutter_device_apps_android
-  flutter_device_apps_platform_interface:
-    path: ../flutter_device_apps_platform_interface
+  flutter_device_apps_android: ^1.0.0
+  flutter_device_apps_platform_interface: ^1.0.0
 
 dev_dependencies:
   flutter_lints: ^6.0.0
