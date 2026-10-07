@@ -92,8 +92,9 @@ void main() {
   });
 
   test('public install source query exposes its model and preserves missing packages', () async {
-    final AppInstallSourceInfo? info =
-        await FlutterDeviceApps.getInstallSourceInfo('com.example.user');
+    final AppInstallSourceInfo? info = await FlutterDeviceApps.getInstallSourceInfo(
+      'com.example.user',
+    );
     expect(info, isNotNull);
     expect(info!.installingPackageName, 'com.android.vending');
     expect(info.packageSource, 2);

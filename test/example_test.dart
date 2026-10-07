@@ -24,25 +24,25 @@ void main() {
   late List<String> eventCalls;
 
   Map<String, Object?> app(String packageName) => {
-        'packageName': packageName,
-        'appName': packageName == 'com.example.app' ? 'Example App' : 'Other App',
-        'versionName': '1.2.3',
-        'versionCode': 123,
-        'uid': 10123,
-        'apkPath': '/data/app/example/base.apk',
-        'apkSizeBytes': 2048,
-        'dataPath': '/data/user/0/example',
-        'isOnExternalStorage': false,
-        'firstInstallTime': 1700000000000,
-        'lastUpdateTime': 1700000001000,
-        'isSystem': false,
-        'category': 7,
-        'targetSdkVersion': 36,
-        'minSdkVersion': 24,
-        'enabled': true,
-        'processName': 'example.process',
-        'installLocation': 1,
-      };
+    'packageName': packageName,
+    'appName': packageName == 'com.example.app' ? 'Example App' : 'Other App',
+    'versionName': '1.2.3',
+    'versionCode': 123,
+    'uid': 10123,
+    'apkPath': '/data/app/example/base.apk',
+    'apkSizeBytes': 2048,
+    'dataPath': '/data/user/0/example',
+    'isOnExternalStorage': false,
+    'firstInstallTime': 1700000000000,
+    'lastUpdateTime': 1700000001000,
+    'isSystem': false,
+    'category': 7,
+    'targetSdkVersion': 36,
+    'minSdkVersion': 24,
+    'enabled': true,
+    'processName': 'example.process',
+    'installLocation': 1,
+  };
 
   setUp(() {
     originalPlatform = FlutterDeviceAppsPlatform.instance;
@@ -56,10 +56,10 @@ void main() {
         switch (call.method) {
           case 'listApps':
             final String? prefix = args!['packageNamePrefix'] as String?;
-            return ['com.example.app', 'org.other.app']
-                .where((pkg) => prefix == null || pkg.startsWith(prefix))
-                .map(app)
-                .toList();
+            return [
+              'com.example.app',
+              'org.other.app',
+            ].where((pkg) => prefix == null || pkg.startsWith(prefix)).map(app).toList();
           case 'getApp':
             if (packageName == 'com.missing.app') return null;
             return app(packageName! as String);
@@ -109,8 +109,8 @@ void main() {
   });
 
   Finder input(String label) => find.byWidgetPredicate(
-        (widget) => widget is TextField && widget.decoration?.labelText == label,
-      );
+    (widget) => widget is TextField && widget.decoration?.labelText == label,
+  );
 
   Future<void> startExample(WidgetTester tester, {Size size = const Size(1200, 1000)}) async {
     FlutterDeviceAppsAndroid.registerWith();
@@ -155,8 +155,9 @@ void main() {
     await disposeExample(tester);
   });
 
-  testWidgets('manual package queries distinguish missing values without loading metadata',
-      (tester) async {
+  testWidgets('manual package queries distinguish missing values without loading metadata', (
+    tester,
+  ) async {
     await startExample(tester, size: const Size(400, 800));
     await tester.enterText(input('Package name'), 'com.example.app');
     for (final label in ['Installed?', 'System?', 'Enabled?', 'Launchable?']) {
@@ -188,8 +189,9 @@ void main() {
     await disposeExample(tester);
   });
 
-  testWidgets('icon, permissions and all install source fields can be queried independently',
-      (tester) async {
+  testWidgets('icon, permissions and all install source fields can be queried independently', (
+    tester,
+  ) async {
     await startExample(tester);
     await tester.enterText(input('Package name'), 'com.example.app');
     await press(tester, 'Load Icon');
@@ -260,8 +262,9 @@ void main() {
     await disposeExample(tester);
   });
 
-  testWidgets('monitoring displays replacing and cancels the channel on stop and dispose',
-      (tester) async {
+  testWidgets('monitoring displays replacing and cancels the channel on stop and dispose', (
+    tester,
+  ) async {
     await startExample(tester);
     await tester.tap(find.byTooltip('Start Monitoring'));
     await tester.pumpAndSettle();

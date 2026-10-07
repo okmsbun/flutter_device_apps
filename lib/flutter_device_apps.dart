@@ -32,13 +32,12 @@ class FlutterDeviceApps {
     bool onlyLaunchable = true,
     bool includeIcons = false,
     String? packageNamePrefix,
-  }) =>
-      _p.listApps(
-        includeSystem: includeSystem,
-        onlyLaunchable: onlyLaunchable,
-        includeIcons: includeIcons,
-        packageNamePrefix: packageNamePrefix,
-      );
+  }) => _p.listApps(
+    includeSystem: includeSystem,
+    onlyLaunchable: onlyLaunchable,
+    includeIcons: includeIcons,
+    packageNamePrefix: packageNamePrefix,
+  );
 
   /// Gets information about a specific app by its package name.
   ///
