@@ -1,3 +1,18 @@
+## 1.0.0
+
+- **BREAKING**: Raised the minimum requirements to Dart 3.12.0 and Flutter 3.44.0.
+- Updated `flutter_device_apps_android` and `flutter_device_apps_platform_interface` dependencies to `^1.0.0`.
+- Added `isAppInstalled`, `isSystemApp`, `isAppEnabled`, and `isAppLaunchable` to query app state without loading full app metadata.
+- Added `getAppIcon` to retrieve an app icon separately as PNG bytes.
+- Added `getInstallSourceInfo` and exported `AppInstallSourceInfo` for installer, initiating package, originating package, package source, and update owner information.
+- Deprecated `getInstallerStore`. Use `getInstallSourceInfo` and its `installingPackageName` field instead.
+- Added optional, case-sensitive `packageNamePrefix` filtering to `listApps`, applied before loading app metadata and icons. Null or empty disables the filter.
+- Includes the Android implementation's `appChanges` subscription cleanup and restart fix.
+- Expanded the example app with package queries, separate icon and install source loading, prefix filtering, and app change monitoring controls.
+- Updated the example's Android build to Gradle 9.3.1, AGP 9.1.0, Kotlin 2.4.0, and built-in Kotlin support.
+- Added API delegation and example widget tests.
+- Updated package topics.
+
 ## 0.8.1
 
 - Updated README.md.

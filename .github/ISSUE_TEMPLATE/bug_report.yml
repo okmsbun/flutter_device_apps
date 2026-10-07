@@ -1,0 +1,25 @@
+name: Bug report
+description: Report something that is not working.
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: What happened?
+      description: What did you expect, and what happened instead?
+    validations:
+      required: true
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: Steps or sample code (optional)
+      description: A small example helps us reproduce the problem.
+  - type: input
+    id: versions
+    attributes:
+      label: Versions (optional)
+      placeholder: Package / Flutter / Android
+  - type: textarea
+    id: logs
+    attributes:
+      label: Error output (optional)
+      render: text
