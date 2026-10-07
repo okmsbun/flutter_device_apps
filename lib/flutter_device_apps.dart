@@ -23,17 +23,21 @@ class FlutterDeviceApps {
   /// [includeSystem] - Whether to include system apps (default: false)
   /// [onlyLaunchable] - Whether to include only launchable apps (default: true)
   /// [includeIcons] - Whether to include app icons in the result (default: false)
+  /// [packageNamePrefix] - Case-sensitive package name prefix. Null or empty
+  /// disables this filter. Filtering happens before app metadata and icons load.
   ///
   /// Returns a Future that resolves to a list of [AppInfo] objects.
   static Future<List<AppInfo>> listApps({
     bool includeSystem = false,
     bool onlyLaunchable = true,
     bool includeIcons = false,
+    String? packageNamePrefix,
   }) =>
       _p.listApps(
         includeSystem: includeSystem,
         onlyLaunchable: onlyLaunchable,
         includeIcons: includeIcons,
+        packageNamePrefix: packageNamePrefix,
       );
 
   /// Gets information about a specific app by its package name.
@@ -62,6 +66,19 @@ class FlutterDeviceApps {
   /// Returns null when the package is missing or hidden by Android package
   /// visibility rules. Includes disabled apps and apps without a launcher entry.
   static Future<bool?> isSystemApp(String packageName) => _p.isSystemApp(packageName);
+
+  /// Whether [packageName] is enabled, using the same value as [AppInfo.enabled].
+  ///
+  /// Returns null when the package is missing or hidden by Android package
+  /// visibility rules. An enabled app may still have no launchable activity.
+  static Future<bool?> isAppEnabled(String packageName) => _p.isAppEnabled(packageName);
+
+  /// Whether Android provides a launch intent for [packageName], as in [openApp].
+  ///
+  /// Does not open the app. Returns false when the package is missing, not
+  /// visible, or has no suitable entry activity. True does not guarantee that
+  /// a subsequent launch will succeed.
+  static Future<bool> isAppLaunchable(String packageName) => _p.isAppLaunchable(packageName);
 
   /// Gets the requested permissions for a specific app.
   ///
