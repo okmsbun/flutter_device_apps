@@ -7,134 +7,85 @@
 <a href="https://opensource.org/licenses/MIT"><img src="https://img.shields.io/badge/license-MIT-purple.svg" alt="License: MIT"></a>
 </p>
 
-A Flutter plugin to list, inspect, launch, and monitor installed apps on Android.
+A Flutter plugin to list, inspect, launch, and monitor installed Android apps.
 
-## Quick start
+Requires Android API 24+, Flutter 3.44+, and Dart 3.12+.
+[API reference](https://pub.dev/documentation/flutter_device_apps/latest/flutter_device_apps/)
+
+Call `WidgetsFlutterBinding.ensureInitialized()` only when using APIs before `runApp()`.
+Calls from `initState()` and UI callbacks need no extra initialization.
 
 ### List apps
 
 ```dart
 final apps = await FlutterDeviceApps.listApps(
-  includeSystem: false, // Include visible system apps.
-  onlyLaunchable: true, // Only apps with a launcher entry.
-  includeIcons: false, // Load icon bytes.
-  // Optional, case-sensitive filters. Null or empty disables each filter.
-  packageNamePrefix: 'com.google.',
-  packageNameContains: 'photos',
+  includeSystem: false,
+  onlyLaunchable: true,
+  includeIcons: false,
+  packageNamePrefix: null, // Optional: 'com.google.'.
+  packageNameContains: null, // Optional: 'photos'.
 );
 ```
 
-Use either filter on its own, or combine them: both must match when provided.
-The example above matches package names that start with `com.google.` and contain
-`photos`. Filtering happens before loading app metadata and icons.
-
-### Get details for one app
-
-```dart
-final appInfo = await FlutterDeviceApps.getApp('com.example.myapp', includeIcon: true);
-```
+Filters are case-sensitive and combined with AND; `null` or `''` disables each filter.
 
 ### Get specific apps
 
 ```dart
+final app = await FlutterDeviceApps.getApp('com.whatsapp', includeIcon: true);
+
 final apps = await FlutterDeviceApps.getApps(
   ['com.whatsapp', 'org.telegram.messenger'],
   includeIcons: true,
 );
 ```
 
-Only the supplied exact package names are queried, in one native request.
-Results follow the input order and contain each available package once.
-Missing, hidden, and blank package names are skipped; an empty input returns an
-empty list. Names are case-sensitive and are not trimmed. Visible system apps and
-apps without a launcher entry are included. Icons are optional and default to off.
-Android package visibility rules still apply; see the Android notes below.
+`getApp()` returns `null` if unavailable; `getApps()` returns `[]` when no apps are found.
 
-#### AppInfo fields
-
-- Identity: `packageName`, `appName`, `uid`, `processName`
-- Version: `versionName`, `versionCode`, `targetSdkVersion`, `minSdkVersion`
-- State: `isSystem`, `enabled`, `isOnExternalStorage`
-- Files: `apkPath`, `apkSizeBytes` (base + split APKs), `dataPath`
-- Install/update times: `firstInstallTime`, `lastUpdateTime`
-- Icon: `iconBytes` (when requested)
-- Android codes: `category`, `installLocation` (raw integers)
-
-`minSdkVersion` describes the installed APK variant and may differ from the original
-app bundle's minimum SDK, including for Google Play installs.
-
-Fields are nullable. See the [AppInfo API](https://pub.dev/documentation/flutter_device_apps_platform_interface/latest/flutter_device_apps_platform_interface/AppInfo-class.html) for details.
-
-### Get requested permissions on demand
+### Detect frameworks
 
 ```dart
-final permissions = await FlutterDeviceApps.getRequestedPermissions('com.example.myapp');
+final frameworks = await FlutterDeviceApps.detectAppFrameworks('com.example.app');
 ```
 
-### App queries
-
-```dart
-final installed = await FlutterDeviceApps.isAppInstalled('com.example.myapp');
-final system = await FlutterDeviceApps.isSystemApp('com.example.myapp');
-final enabled = await FlutterDeviceApps.isAppEnabled('com.example.myapp');
-final launchable = await FlutterDeviceApps.isAppLaunchable('com.example.myapp');
-final icon = await FlutterDeviceApps.getAppIcon('com.example.myapp');
-```
-
-Missing or hidden packages return `false` from `isAppInstalled` and `null` from
-`isSystemApp` / `isAppEnabled`. For the latter two, `false` means non-system or
-disabled, respectively.
-
-### Open / Settings / Uninstall
-
-```dart
-await FlutterDeviceApps.openApp('com.example.myapp');
-await FlutterDeviceApps.openAppSettings('com.example.myapp');
-await FlutterDeviceApps.uninstallApp('com.example.myapp');
-```
-
-`uninstallApp` returning `true` means the uninstall screen opened; the user can still cancel.
+Detects packaged indicators for **Flutter, React Native, Unity, Unreal Engine,
+Godot, and .NET Android**. This does not identify the app's primary UI framework.
+`[]` means no supported match; scan failures throw.
 
 ### Listen to app changes
 
 ```dart
-final sub = FlutterDeviceApps.appChanges.listen(
-  (event) => print('${event.type} → ${event.packageName}'),
-  onError: (error) => print('Monitoring error: $error'),
+final subscription = FlutterDeviceApps.appChanges.listen(
+  (event) => print('${event.type}: ${event.packageName}'),
+  onError: (error) => print(error),
 );
-
-// Stop monitoring when no longer needed.
-await sub.cancel();
 ```
 
-Monitoring starts with the first listener and stops when the last listener cancels;
-`event.isReplacing` indicates a replacement, such as an app update.
+Stop listening with `await subscription.cancel()`.
 
-### Get install source information
+## More APIs
 
-```dart
-final AppInstallSourceInfo? source =
-    await FlutterDeviceApps.getInstallSourceInfo('com.example.myapp');
-final installer = source?.installingPackageName;
-```
+All methods below belong to `FlutterDeviceApps`.
 
-`AppInstallSourceInfo` exposes `installingPackageName`, `initiatingPackageName`,
-`originatingPackageName`, `packageSource`, and `updateOwnerPackageName`.
-Fields may be null depending on Android version and available information.
-`originatingPackageName` requires the privileged `INSTALL_PACKAGES` permission
-and is null for ordinary apps; declaring the permission in the manifest is not enough.
+| Method                                 | Purpose                                         |
+| -------------------------------------- | ----------------------------------------------- |
+| `getAppIcon(packageName)`              | Get PNG icon bytes.                             |
+| `isAppInstalled(packageName)`          | Check whether the app is installed and visible. |
+| `isSystemApp(packageName)`             | Check system app status; `null` if unavailable. |
+| `isAppEnabled(packageName)`            | Check enabled status; `null` if unavailable.    |
+| `isAppLaunchable(packageName)`         | Check whether a launch intent exists.           |
+| `getRequestedPermissions(packageName)` | Get requested permission names.                 |
+| `getInstallSourceInfo(packageName)`    | Get installer and install source metadata.      |
+| `openApp(packageName)`                 | Launch the app.                                 |
+| `openAppSettings(packageName)`         | Open Android app settings.                      |
+| `uninstallApp(packageName)`            | Open the uninstall confirmation screen.         |
 
-## Android notes
+## Android setup
 
-### Package visibility (Android 11+)
+Only visible packages can be queried. Launcher app visibility is included.
+Place the XML below inside `<manifest>`, outside `<application>`, as needed.
 
-Queries can only access apps visible to your app. The plugin already declares
-launcher app visibility, so listing those apps needs no extra permission.
-
-`includeSystem` and `onlyLaunchable` filter visible apps; they do not expand visibility.
-
-To query other specific packages, add this to `android/app/src/main/AndroidManifest.xml`,
-inside `<manifest>` and outside `<application>`:
+For other specific packages:
 
 ```xml
 <queries>
@@ -142,17 +93,14 @@ inside `<manifest>` and outside `<application>`:
 </queries>
 ```
 
-For access to all installed apps, add this permission in the same location:
+For broader visibility, add this permission; Google Play restricts its use.
+See [package visibility](https://developer.android.com/training/package-visibility/declaring).
 
 ```xml
 <uses-permission android:name="android.permission.QUERY_ALL_PACKAGES" />
 ```
 
-Google Play restricts this permission. See [Android package visibility](https://developer.android.com/training/package-visibility/declaring).
-
-### Uninstall permission
-
-To use the `uninstallApp()` function, add this permission to your `AndroidManifest.xml`:
+`uninstallApp()` requires:
 
 ```xml
 <uses-permission android:name="android.permission.REQUEST_DELETE_PACKAGES" />
@@ -160,4 +108,4 @@ To use the `uninstallApp()` function, add this permission to your `AndroidManife
 
 ## License
 
-MIT © 2026 okmsbun
+[MIT](LICENSE) © 2026 okmsbun
