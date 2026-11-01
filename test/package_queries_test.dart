@@ -25,6 +25,15 @@ void main() {
             {'packageName': 'com.example.user'},
           ];
         }
+        if (call.method == 'getApps') {
+          return [
+            {'packageName': 'com.example.second'},
+            {'packageName': 'com.example.user'},
+          ];
+        }
+        if (call.method == 'detectAppFrameworks') {
+          return ['flutter', 'reactNative', 'unity', 'unrealEngine', 'godot', 'dotnetAndroid'];
+        }
         final Object? packageName = args['packageName'];
         if (call.method == 'isAppInstalled') return packageName != 'com.example.missing';
         if (call.method == 'isAppLaunchable') return packageName == 'com.example.user';
@@ -47,12 +56,13 @@ void main() {
     );
   });
 
-  test('public list query forwards prefix and existing options to Android', () async {
+  test('public list query forwards both filters and existing options to Android', () async {
     final List<AppInfo> apps = await FlutterDeviceApps.listApps(
       includeSystem: true,
       onlyLaunchable: false,
       includeIcons: true,
-      packageNamePrefix: 'com.example.',
+      packageNamePrefix: 'com.',
+      packageNameContains: 'example',
     );
     expect(apps.single.packageName, 'com.example.user');
     expect(calls.single.method, 'listApps');
@@ -60,18 +70,63 @@ void main() {
       'includeSystem': true,
       'onlyLaunchable': false,
       'includeIcons': true,
-      'packageNamePrefix': 'com.example.',
+      'packageNamePrefix': 'com.',
+      'packageNameContains': 'example',
     });
   });
 
-  test('public list query uses an optional prefix', () async {
+  test('public list query uses optional package name filters', () async {
     await FlutterDeviceApps.listApps();
     expect(calls.single.arguments, {
       'includeSystem': false,
       'onlyLaunchable': true,
       'includeIcons': false,
       'packageNamePrefix': null,
+      'packageNameContains': null,
     });
+  });
+
+  test('public list query supports a prefix without a substring', () async {
+    await FlutterDeviceApps.listApps(packageNamePrefix: 'com.example.');
+    expect(calls.single.arguments, {
+      'includeSystem': false,
+      'onlyLaunchable': true,
+      'includeIcons': false,
+      'packageNamePrefix': 'com.example.',
+      'packageNameContains': null,
+    });
+  });
+
+  test('public batch lookup forwards exact names in one native request', () async {
+    final names = [
+      'com.example.second',
+      'com.example.missing',
+      'com.example.user',
+      'com.example.second',
+    ];
+    final List<AppInfo> apps = await FlutterDeviceApps.getApps(names, includeIcons: true);
+    expect(apps.map((app) => app.packageName), ['com.example.second', 'com.example.user']);
+    expect(calls, hasLength(1));
+    expect(calls.single.method, 'getApps');
+    expect(calls.single.arguments, {'packageNames': names, 'includeIcons': true});
+  });
+
+  test('public batch lookup leaves icons disabled by default', () async {
+    await FlutterDeviceApps.getApps(['com.example.second', 'com.example.user']);
+    expect(calls.single.arguments, {
+      'packageNames': ['com.example.second', 'com.example.user'],
+      'includeIcons': false,
+    });
+  });
+
+  test('public framework detection decodes all types through a single native request', () async {
+    final List<AppFramework> frameworks = await FlutterDeviceApps.detectAppFrameworks(
+      'com.example.app',
+    );
+    expect(frameworks, AppFramework.values);
+    expect(calls, hasLength(1));
+    expect(calls.single.method, 'detectAppFrameworks');
+    expect(calls.single.arguments, {'packageName': 'com.example.app'});
   });
 
   test('public icon query returns bytes and null without fetching metadata', () async {

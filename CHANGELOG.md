@@ -1,3 +1,11 @@
+## 1.1.0
+
+- **BREAKING**: Removed `getInstallerStore`; use `getInstallSourceInfo`.
+- Added `getApps` for batch lookups.
+- Added `detectAppFrameworks` and `AppFramework`.
+- Added `packageNameContains`, combined with `packageNamePrefix` using AND.
+- Updated the example app.
+
 ## 1.0.0
 
 - **BREAKING**: Raised the minimum requirements to Dart 3.12.0 and Flutter 3.44.0.
