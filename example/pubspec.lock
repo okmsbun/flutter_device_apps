@@ -60,23 +60,23 @@ packages:
       path: ".."
       relative: true
     source: path
-    version: "1.0.0"
+    version: "1.1.0"
   flutter_device_apps_android:
     dependency: transitive
     description:
       name: flutter_device_apps_android
-      sha256: "9d060b200c34df70dee2d6ecd54ac6822d726f50c693f8e13539c92cad98926a"
+      sha256: e1528d1a757ce4096d426639e733e52cfc59bc5e89d86785f28897dbdbfd925b
       url: "https://pub.dev"
     source: hosted
-    version: "1.0.0"
+    version: "1.1.0"
   flutter_device_apps_platform_interface:
     dependency: transitive
     description:
       name: flutter_device_apps_platform_interface
-      sha256: "618ee4b23fc09691e9b2ae248811e230e8bda9b95ee3fb683d7ed7c673fbbbfc"
+      sha256: ac820cd1e46321f448d80f969ae15e803d5bad582b8ea282d5d0e2656f2835ae
       url: "https://pub.dev"
     source: hosted
-    version: "1.0.0"
+    version: "1.1.0"
   flutter_lints:
     dependency: "direct dev"
     description:
@@ -219,18 +219,18 @@ packages:
     dependency: transitive
     description:
       name: vector_math
-      sha256: "92b9910f66ed1057fd4da7b040ae7c74cafacf885bdc81be496928d5049b032d"
+      sha256: fa49e1674cb84acb900141714e6c6e1f9ae099827c24d141430ff6819db4e1bc
       url: "https://pub.dev"
     source: hosted
-    version: "2.4.3"
+    version: "2.4.4"
   vm_service:
     dependency: transitive
     description:
       name: vm_service
-      sha256: "5f37239c4851efcef929cea7824e76df7f2f0970aef85d66bbc430afa40e72f0"
+      sha256: "89b11d62e1040ee681af3b4f1c97a803ecbf010c6e8b9c5896ee5b08c3bf7b78"
       url: "https://pub.dev"
     source: hosted
-    version: "15.3.0"
+    version: "15.4.0"
 sdks:
   dart: ">=3.12.0 <4.0.0"
   flutter: ">=3.44.0"
