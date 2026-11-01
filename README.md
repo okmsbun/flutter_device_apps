@@ -2,9 +2,9 @@
 
 <p align="center">
 <a href="https://pub.dev/packages/flutter_device_apps"><img src="https://img.shields.io/pub/v/flutter_device_apps.svg?color=0175C2" alt="Pub"></a>
+<a href="https://pub.dev/packages/flutter_device_apps/score"><img src="https://img.shields.io/pub/points/flutter_device_apps" alt="flutter_device_apps Pub points"></a>
 <a href="https://github.com/okmsbun/flutter_device_apps"><img src="https://img.shields.io/github/stars/okmsbun/flutter_device_apps.svg?style=flat&logo=github&colorB=deeppink&label=stars" alt="Star on Github"></a>
 <a href="https://opensource.org/licenses/MIT"><img src="https://img.shields.io/badge/license-MIT-purple.svg" alt="License: MIT"></a>
-<a href="https://github.com/okmsbun/flutter_device_apps"><img src="https://img.shields.io/badge/source-github-black.svg?logo=github" alt="GitHub Repository"></a>
 </p>
 
 A Flutter plugin to list, inspect, launch, and monitor installed apps on Android.
@@ -18,10 +18,15 @@ final apps = await FlutterDeviceApps.listApps(
   includeSystem: false, // Include visible system apps.
   onlyLaunchable: true, // Only apps with a launcher entry.
   includeIcons: false, // Load icon bytes.
-  // Optional, case-sensitive prefix. Null or empty disables filtering.
-  packageNamePrefix: 'com.example.',
+  // Optional, case-sensitive filters. Null or empty disables each filter.
+  packageNamePrefix: 'com.google.',
+  packageNameContains: 'photos',
 );
 ```
+
+Use either filter on its own, or combine them: both must match when provided.
+The example above matches package names that start with `com.google.` and contain
+`photos`. Filtering happens before loading app metadata and icons.
 
 ### Get details for one app
 
@@ -102,8 +107,6 @@ final installer = source?.installingPackageName;
 Fields may be null depending on Android version and available information.
 `originatingPackageName` requires the privileged `INSTALL_PACKAGES` permission
 and is null for ordinary apps; declaring the permission in the manifest is not enough.
-
-`getInstallerStore` is deprecated; use `source?.installingPackageName` instead.
 
 ## Android notes
 

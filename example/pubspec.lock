@@ -70,11 +70,12 @@ packages:
     source: hosted
     version: "1.0.0"
   flutter_device_apps_platform_interface:
-    dependency: "direct overridden"
+    dependency: transitive
     description:
-      path: "../../flutter_device_apps_platform_interface"
-      relative: true
-    source: path
+      name: flutter_device_apps_platform_interface
+      sha256: "618ee4b23fc09691e9b2ae248811e230e8bda9b95ee3fb683d7ed7c673fbbbfc"
+      url: "https://pub.dev"
+    source: hosted
     version: "1.0.0"
   flutter_lints:
     dependency: "direct dev"

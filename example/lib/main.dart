@@ -44,6 +44,7 @@ class _AppManagerScreenState extends State<AppManagerScreen> {
   final List<String> _changeEvents = [];
   final TextEditingController _packageNameController = TextEditingController();
   final TextEditingController _packageNamePrefixController = TextEditingController();
+  final TextEditingController _packageNameContainsController = TextEditingController();
   final Map<String, String> _queryResults = {};
   bool _queryLoading = false;
   bool _iconQueried = false;
@@ -69,6 +70,7 @@ class _AppManagerScreenState extends State<AppManagerScreen> {
     unawaited(_appChangeSubscription?.cancel());
     _packageNameController.dispose();
     _packageNamePrefixController.dispose();
+    _packageNameContainsController.dispose();
     super.dispose();
   }
 
@@ -84,6 +86,7 @@ class _AppManagerScreenState extends State<AppManagerScreen> {
         onlyLaunchable: _onlyLaunchable,
         includeIcons: _includeIcons,
         packageNamePrefix: _packageNamePrefixController.text,
+        packageNameContains: _packageNameContainsController.text,
       );
 
       if (!mounted) return;
@@ -494,6 +497,20 @@ class _AppManagerScreenState extends State<AppManagerScreen> {
               decoration: const InputDecoration(
                 labelText: 'Package name prefix',
                 hintText: 'com.google.',
+                helperText: 'Optional. Both package name filters must match.',
+                border: OutlineInputBorder(),
+                isDense: true,
+              ),
+              onSubmitted: (_) => _loadApps(),
+            ),
+            const SizedBox(height: 16),
+
+            TextField(
+              controller: _packageNameContainsController,
+              enabled: !_loading,
+              decoration: const InputDecoration(
+                labelText: 'Package name contains',
+                hintText: 'google',
                 helperText: 'Leave empty for all packages. Apply with Refresh Apps.',
                 border: OutlineInputBorder(),
                 isDense: true,

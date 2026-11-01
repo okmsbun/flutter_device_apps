@@ -23,8 +23,10 @@ class FlutterDeviceApps {
   /// [includeSystem] - Whether to include system apps (default: false)
   /// [onlyLaunchable] - Whether to include only launchable apps (default: true)
   /// [includeIcons] - Whether to include app icons in the result (default: false)
-  /// [packageNamePrefix] - Case-sensitive package name prefix. Null or empty
-  /// disables this filter. Filtering happens before app metadata and icons load.
+  /// [packageNamePrefix] - Case-sensitive package name prefix.
+  /// [packageNameContains] - Case-sensitive substring of the package name.
+  /// Null or empty disables each filter independently. When both are provided,
+  /// both must match. Filtering happens before app metadata and icons load.
   ///
   /// Returns a Future that resolves to a list of [AppInfo] objects.
   static Future<List<AppInfo>> listApps({
@@ -32,11 +34,13 @@ class FlutterDeviceApps {
     bool onlyLaunchable = true,
     bool includeIcons = false,
     String? packageNamePrefix,
+    String? packageNameContains,
   }) => _p.listApps(
     includeSystem: includeSystem,
     onlyLaunchable: onlyLaunchable,
     includeIcons: includeIcons,
     packageNamePrefix: packageNamePrefix,
+    packageNameContains: packageNameContains,
   );
 
   /// Gets information about a specific app by its package name.
@@ -131,12 +135,4 @@ class FlutterDeviceApps {
   /// null fields when Android does not provide the corresponding information.
   static Future<AppInstallSourceInfo?> getInstallSourceInfo(String packageName) =>
       _p.getInstallSourceInfo(packageName);
-
-  /// Gets the installer store for the specified package name.
-  ///
-  /// [packageName] - The package name of the app to get the installer store for
-  ///
-  /// Returns a Future that resolves to the installer store name or null if not available.
-  @Deprecated('Use getInstallSourceInfo() and its installingPackageName instead.')
-  static Future<String?> getInstallerStore(String packageName) => _p.getInstallerStore(packageName);
 }

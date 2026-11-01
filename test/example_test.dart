@@ -56,10 +56,15 @@ void main() {
         switch (call.method) {
           case 'listApps':
             final String? prefix = args!['packageNamePrefix'] as String?;
-            return [
-              'com.example.app',
-              'org.other.app',
-            ].where((pkg) => prefix == null || pkg.startsWith(prefix)).map(app).toList();
+            final String? substring = args['packageNameContains'] as String?;
+            return ['com.example.app', 'org.other.app']
+                .where(
+                  (pkg) =>
+                      (prefix == null || pkg.startsWith(prefix)) &&
+                      (substring == null || pkg.contains(substring)),
+                )
+                .map(app)
+                .toList();
           case 'getApp':
             if (packageName == 'com.missing.app') return null;
             return app(packageName! as String);
@@ -135,10 +140,13 @@ void main() {
     expect(tester.takeException(), isNull);
   }
 
-  testWidgets('prefix and existing filters are applied by Refresh Apps', (tester) async {
+  testWidgets('both package name filters and existing options are applied by Refresh Apps', (
+    tester,
+  ) async {
     await startExample(tester);
     expect(find.text('Installed Apps (2)'), findsOneWidget);
-    await tester.enterText(input('Package name prefix'), 'com.example.');
+    await tester.enterText(input('Package name prefix'), 'com.');
+    await tester.enterText(input('Package name contains'), 'example');
     for (final label in ['System Apps', 'Launchable Only', 'Include Icons']) {
       await tester.tap(find.text(label));
       await tester.pump();
@@ -148,10 +156,35 @@ void main() {
       'includeSystem': true,
       'onlyLaunchable': false,
       'includeIcons': true,
-      'packageNamePrefix': 'com.example.',
+      'packageNamePrefix': 'com.',
+      'packageNameContains': 'example',
     });
     expect(find.text('Installed Apps (1)'), findsOneWidget);
     expect(find.text('Other App'), findsNothing);
+    await disposeExample(tester);
+  });
+
+  testWidgets('package name filters combine with AND and can be cleared independently', (
+    tester,
+  ) async {
+    await startExample(tester);
+    await tester.enterText(input('Package name prefix'), 'com.');
+    await press(tester, 'Refresh Apps');
+    expect(find.text('Installed Apps (1)'), findsOneWidget);
+    expect(find.text('Example App'), findsOneWidget);
+
+    await tester.enterText(input('Package name contains'), 'other');
+    await press(tester, 'Refresh Apps');
+    expect(find.text('Installed Apps (0)'), findsOneWidget);
+
+    await tester.enterText(input('Package name prefix'), '');
+    await press(tester, 'Refresh Apps');
+    expect(find.text('Installed Apps (1)'), findsOneWidget);
+    expect(find.text('Other App'), findsOneWidget);
+
+    await tester.enterText(input('Package name contains'), '');
+    await press(tester, 'Refresh Apps');
+    expect(find.text('Installed Apps (2)'), findsOneWidget);
     await disposeExample(tester);
   });
 

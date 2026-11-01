@@ -47,12 +47,13 @@ void main() {
     );
   });
 
-  test('public list query forwards prefix and existing options to Android', () async {
+  test('public list query forwards both filters and existing options to Android', () async {
     final List<AppInfo> apps = await FlutterDeviceApps.listApps(
       includeSystem: true,
       onlyLaunchable: false,
       includeIcons: true,
-      packageNamePrefix: 'com.example.',
+      packageNamePrefix: 'com.',
+      packageNameContains: 'example',
     );
     expect(apps.single.packageName, 'com.example.user');
     expect(calls.single.method, 'listApps');
@@ -60,17 +61,30 @@ void main() {
       'includeSystem': true,
       'onlyLaunchable': false,
       'includeIcons': true,
-      'packageNamePrefix': 'com.example.',
+      'packageNamePrefix': 'com.',
+      'packageNameContains': 'example',
     });
   });
 
-  test('public list query uses an optional prefix', () async {
+  test('public list query uses optional package name filters', () async {
     await FlutterDeviceApps.listApps();
     expect(calls.single.arguments, {
       'includeSystem': false,
       'onlyLaunchable': true,
       'includeIcons': false,
       'packageNamePrefix': null,
+      'packageNameContains': null,
+    });
+  });
+
+  test('public list query supports a prefix without a substring', () async {
+    await FlutterDeviceApps.listApps(packageNamePrefix: 'com.example.');
+    expect(calls.single.arguments, {
+      'includeSystem': false,
+      'onlyLaunchable': true,
+      'includeIcons': false,
+      'packageNamePrefix': 'com.example.',
+      'packageNameContains': null,
     });
   });
 
