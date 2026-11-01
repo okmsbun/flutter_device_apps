@@ -43,7 +43,10 @@ class _AppManagerScreenState extends State<AppManagerScreen> {
   bool _monitoringBusy = false;
   final List<String> _changeEvents = [];
   final TextEditingController _packageNameController = TextEditingController();
+  final TextEditingController _packageNamesController = TextEditingController();
+  bool _includeBatchIcons = false;
   final TextEditingController _packageNamePrefixController = TextEditingController();
+  final TextEditingController _packageNameContainsController = TextEditingController();
   final Map<String, String> _queryResults = {};
   bool _queryLoading = false;
   bool _iconQueried = false;
@@ -68,7 +71,9 @@ class _AppManagerScreenState extends State<AppManagerScreen> {
   void dispose() {
     unawaited(_appChangeSubscription?.cancel());
     _packageNameController.dispose();
+    _packageNamesController.dispose();
     _packageNamePrefixController.dispose();
+    _packageNameContainsController.dispose();
     super.dispose();
   }
 
@@ -84,6 +89,7 @@ class _AppManagerScreenState extends State<AppManagerScreen> {
         onlyLaunchable: _onlyLaunchable,
         includeIcons: _includeIcons,
         packageNamePrefix: _packageNamePrefixController.text,
+        packageNameContains: _packageNameContainsController.text,
       );
 
       if (!mounted) return;
@@ -96,6 +102,31 @@ class _AppManagerScreenState extends State<AppManagerScreen> {
       setState(() {
         _statusMessage = 'Error loading apps: $e';
       });
+    } finally {
+      if (mounted) setState(() => _loading = false);
+    }
+  }
+
+  Future<void> _loadSpecificApps() async {
+    final packageNames = _packageNamesController.text
+        .split(RegExp(r'[,\s]+'))
+        .where((name) => name.isNotEmpty)
+        .toList();
+    setState(() {
+      _loading = true;
+      _statusMessage = 'Loading specific apps...';
+    });
+
+    try {
+      final apps = await FlutterDeviceApps.getApps(packageNames, includeIcons: _includeBatchIcons);
+      if (!mounted) return;
+      setState(() {
+        _apps = apps;
+        _statusMessage = 'Found ${apps.length} requested apps';
+      });
+    } catch (e) {
+      if (!mounted) return;
+      setState(() => _statusMessage = 'Error loading specific apps: $e');
     } finally {
       if (mounted) setState(() => _loading = false);
     }
@@ -221,6 +252,33 @@ class _AppManagerScreenState extends State<AppManagerScreen> {
     } catch (e) {
       if (!mounted) return;
       setState(() => _statusMessage = 'Error checking $label: $e');
+    } finally {
+      if (mounted) setState(() => _queryLoading = false);
+    }
+  }
+
+  Future<void> _detectAppFrameworks() async {
+    final packageName = _queryPackageName();
+    if (packageName == null) return;
+    setState(() {
+      _queryLoading = true;
+      _queryResults.remove('Frameworks');
+      _statusMessage = 'Scanning framework indicators for $packageName...';
+    });
+    try {
+      final List<AppFramework> frameworks = await FlutterDeviceApps.detectAppFrameworks(
+        packageName,
+      );
+      if (!mounted) return;
+      setState(() {
+        _queryResults['Frameworks'] = frameworks.isEmpty
+            ? 'No supported indicators found'
+            : frameworks.map((framework) => framework.name).join(', ');
+        _statusMessage = 'Framework scan complete';
+      });
+    } catch (e) {
+      if (!mounted) return;
+      setState(() => _statusMessage = 'Error detecting frameworks: $e');
     } finally {
       if (mounted) setState(() => _queryLoading = false);
     }
@@ -494,6 +552,20 @@ class _AppManagerScreenState extends State<AppManagerScreen> {
               decoration: const InputDecoration(
                 labelText: 'Package name prefix',
                 hintText: 'com.google.',
+                helperText: 'Optional. Both package name filters must match.',
+                border: OutlineInputBorder(),
+                isDense: true,
+              ),
+              onSubmitted: (_) => _loadApps(),
+            ),
+            const SizedBox(height: 16),
+
+            TextField(
+              controller: _packageNameContainsController,
+              enabled: !_loading,
+              decoration: const InputDecoration(
+                labelText: 'Package name contains',
+                hintText: 'google',
                 helperText: 'Leave empty for all packages. Apply with Refresh Apps.',
                 border: OutlineInputBorder(),
                 isDense: true,
@@ -608,6 +680,37 @@ class _AppManagerScreenState extends State<AppManagerScreen> {
     );
   }
 
+  Widget _buildSpecificAppQueries() {
+    return ExpansionTile(
+      title: const Text('Specific Apps'),
+      childrenPadding: const EdgeInsets.all(8),
+      children: [
+        TextField(
+          controller: _packageNamesController,
+          enabled: !_loading,
+          minLines: 2,
+          maxLines: 4,
+          decoration: const InputDecoration(
+            labelText: 'Package names',
+            hintText: 'com.whatsapp, org.telegram.messenger',
+            helperText: 'Separate exact package names with commas or new lines.',
+            border: OutlineInputBorder(),
+          ),
+        ),
+        const SizedBox(height: 8),
+        _buildCompactCheckbox('Include Batch Icons', _includeBatchIcons, (value) {
+          setState(() => _includeBatchIcons = value ?? false);
+        }),
+        const SizedBox(height: 8),
+        ElevatedButton.icon(
+          onPressed: _loading ? null : _loadSpecificApps,
+          icon: const Icon(Icons.search),
+          label: const Text('Load Specific Apps'),
+        ),
+      ],
+    );
+  }
+
   bool get _canQueryPackage =>
       !_loading && !_queryLoading && _packageNameController.text.trim().isNotEmpty;
 
@@ -689,6 +792,10 @@ class _AppManagerScreenState extends State<AppManagerScreen> {
               child: const Text('Install Source'),
             ),
             ElevatedButton(
+              onPressed: _canQueryPackage ? _detectAppFrameworks : null,
+              child: const Text('Detect Frameworks'),
+            ),
+            ElevatedButton(
               onPressed: _canQueryPackage
                   ? () => _getRequestedPermissions(_packageNameController.text.trim())
                   : null,
@@ -754,6 +861,7 @@ class _AppManagerScreenState extends State<AppManagerScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             _buildPackageQueries(),
+            _buildSpecificAppQueries(),
             const SizedBox(height: 16),
             if (_selectedApp == null)
               const Text('Select an app or enter its package name to view details')
