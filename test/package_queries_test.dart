@@ -25,6 +25,12 @@ void main() {
             {'packageName': 'com.example.user'},
           ];
         }
+        if (call.method == 'getApps') {
+          return [
+            {'packageName': 'com.example.second'},
+            {'packageName': 'com.example.user'},
+          ];
+        }
         final Object? packageName = args['packageName'];
         if (call.method == 'isAppInstalled') return packageName != 'com.example.missing';
         if (call.method == 'isAppLaunchable') return packageName == 'com.example.user';
@@ -85,6 +91,28 @@ void main() {
       'includeIcons': false,
       'packageNamePrefix': 'com.example.',
       'packageNameContains': null,
+    });
+  });
+
+  test('public batch lookup forwards exact names in one native request', () async {
+    final names = [
+      'com.example.second',
+      'com.example.missing',
+      'com.example.user',
+      'com.example.second',
+    ];
+    final List<AppInfo> apps = await FlutterDeviceApps.getApps(names, includeIcons: true);
+    expect(apps.map((app) => app.packageName), ['com.example.second', 'com.example.user']);
+    expect(calls, hasLength(1));
+    expect(calls.single.method, 'getApps');
+    expect(calls.single.arguments, {'packageNames': names, 'includeIcons': true});
+  });
+
+  test('public batch lookup leaves icons disabled by default', () async {
+    await FlutterDeviceApps.getApps(['com.example.second', 'com.example.user']);
+    expect(calls.single.arguments, {
+      'packageNames': ['com.example.second', 'com.example.user'],
+      'includeIcons': false,
     });
   });
 

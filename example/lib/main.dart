@@ -43,6 +43,8 @@ class _AppManagerScreenState extends State<AppManagerScreen> {
   bool _monitoringBusy = false;
   final List<String> _changeEvents = [];
   final TextEditingController _packageNameController = TextEditingController();
+  final TextEditingController _packageNamesController = TextEditingController();
+  bool _includeBatchIcons = false;
   final TextEditingController _packageNamePrefixController = TextEditingController();
   final TextEditingController _packageNameContainsController = TextEditingController();
   final Map<String, String> _queryResults = {};
@@ -69,6 +71,7 @@ class _AppManagerScreenState extends State<AppManagerScreen> {
   void dispose() {
     unawaited(_appChangeSubscription?.cancel());
     _packageNameController.dispose();
+    _packageNamesController.dispose();
     _packageNamePrefixController.dispose();
     _packageNameContainsController.dispose();
     super.dispose();
@@ -99,6 +102,31 @@ class _AppManagerScreenState extends State<AppManagerScreen> {
       setState(() {
         _statusMessage = 'Error loading apps: $e';
       });
+    } finally {
+      if (mounted) setState(() => _loading = false);
+    }
+  }
+
+  Future<void> _loadSpecificApps() async {
+    final packageNames = _packageNamesController.text
+        .split(RegExp(r'[,\s]+'))
+        .where((name) => name.isNotEmpty)
+        .toList();
+    setState(() {
+      _loading = true;
+      _statusMessage = 'Loading specific apps...';
+    });
+
+    try {
+      final apps = await FlutterDeviceApps.getApps(packageNames, includeIcons: _includeBatchIcons);
+      if (!mounted) return;
+      setState(() {
+        _apps = apps;
+        _statusMessage = 'Found ${apps.length} requested apps';
+      });
+    } catch (e) {
+      if (!mounted) return;
+      setState(() => _statusMessage = 'Error loading specific apps: $e');
     } finally {
       if (mounted) setState(() => _loading = false);
     }
@@ -625,6 +653,37 @@ class _AppManagerScreenState extends State<AppManagerScreen> {
     );
   }
 
+  Widget _buildSpecificAppQueries() {
+    return ExpansionTile(
+      title: const Text('Specific Apps'),
+      childrenPadding: const EdgeInsets.all(8),
+      children: [
+        TextField(
+          controller: _packageNamesController,
+          enabled: !_loading,
+          minLines: 2,
+          maxLines: 4,
+          decoration: const InputDecoration(
+            labelText: 'Package names',
+            hintText: 'com.whatsapp, org.telegram.messenger',
+            helperText: 'Separate exact package names with commas or new lines.',
+            border: OutlineInputBorder(),
+          ),
+        ),
+        const SizedBox(height: 8),
+        _buildCompactCheckbox('Include Batch Icons', _includeBatchIcons, (value) {
+          setState(() => _includeBatchIcons = value ?? false);
+        }),
+        const SizedBox(height: 8),
+        ElevatedButton.icon(
+          onPressed: _loading ? null : _loadSpecificApps,
+          icon: const Icon(Icons.search),
+          label: const Text('Load Specific Apps'),
+        ),
+      ],
+    );
+  }
+
   bool get _canQueryPackage =>
       !_loading && !_queryLoading && _packageNameController.text.trim().isNotEmpty;
 
@@ -771,6 +830,7 @@ class _AppManagerScreenState extends State<AppManagerScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             _buildPackageQueries(),
+            _buildSpecificAppQueries(),
             const SizedBox(height: 16),
             if (_selectedApp == null)
               const Text('Select an app or enter its package name to view details')

@@ -52,6 +52,16 @@ class FlutterDeviceApps {
   static Future<AppInfo?> getApp(String packageName, {bool includeIcon = false}) =>
       _p.getApp(packageName, includeIcon: includeIcon);
 
+  /// Gets installed apps by their exact [packageNames] in one native request.
+  ///
+  /// Returns each available package once, in order of its first occurrence.
+  /// Missing, hidden, and blank package names are skipped. An empty input returns
+  /// an empty list. Names are case-sensitive and are not trimmed.
+  /// Includes system apps and apps without a launcher entry when visible.
+  /// Set [includeIcons] to load icons alongside app metadata (default: false).
+  static Future<List<AppInfo>> getApps(List<String> packageNames, {bool includeIcons = false}) =>
+      _p.getApps(packageNames, includeIcons: includeIcons);
+
   /// Gets the app icon as PNG bytes without loading the full app metadata.
   ///
   /// Returns null when the package is missing, not visible, or its icon resources

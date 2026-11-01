@@ -34,6 +34,22 @@ The example above matches package names that start with `com.google.` and contai
 final appInfo = await FlutterDeviceApps.getApp('com.example.myapp', includeIcon: true);
 ```
 
+### Get specific apps
+
+```dart
+final apps = await FlutterDeviceApps.getApps(
+  ['com.whatsapp', 'org.telegram.messenger'],
+  includeIcons: true,
+);
+```
+
+Only the supplied exact package names are queried, in one native request.
+Results follow the input order and contain each available package once.
+Missing, hidden, and blank package names are skipped; an empty input returns an
+empty list. Names are case-sensitive and are not trimmed. Visible system apps and
+apps without a launcher entry are included. Icons are optional and default to off.
+Android package visibility rules still apply; see the Android notes below.
+
 #### AppInfo fields
 
 - Identity: `packageName`, `appName`, `uid`, `processName`

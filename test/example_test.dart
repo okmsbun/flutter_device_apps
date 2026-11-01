@@ -65,6 +65,14 @@ void main() {
                 )
                 .map(app)
                 .toList();
+          case 'getApps':
+            final names = args!['packageNames']! as List;
+            if (names.isEmpty) return <Map<String, Object?>>[];
+            if (names.contains('com.error.app')) throw PlatformException(code: 'ERR_GET_APPS');
+            return [
+              for (final name in ['org.other.app', 'com.example.app'])
+                {...app(name), if (args['includeIcons'] == true) 'iconBytes': icon},
+            ];
           case 'getApp':
             if (packageName == 'com.missing.app') return null;
             return app(packageName! as String);
@@ -185,6 +193,54 @@ void main() {
     await tester.enterText(input('Package name contains'), '');
     await press(tester, 'Refresh Apps');
     expect(find.text('Installed Apps (2)'), findsOneWidget);
+    await disposeExample(tester);
+  });
+
+  testWidgets('specific apps load in one batch independently of list filters', (tester) async {
+    await startExample(tester);
+    await tester.enterText(input('Package name prefix'), 'net.unmatched.');
+    await tester.enterText(input('Package name contains'), 'unmatched');
+    await tester.ensureVisible(find.text('Specific Apps'));
+    await tester.tap(find.text('Specific Apps'));
+    await tester.pumpAndSettle();
+    await tester.enterText(
+      input('Package names'),
+      ' org.other.app,\ncom.missing.app, com.example.app\norg.other.app ',
+    );
+    await tester.ensureVisible(find.text('Include Batch Icons'));
+    await tester.tap(find.text('Include Batch Icons'));
+    await tester.pump();
+    calls.clear();
+    await press(tester, 'Load Specific Apps');
+    expect(calls, hasLength(1));
+    expect(calls.single.method, 'getApps');
+    expect(calls.single.arguments, {
+      'packageNames': ['org.other.app', 'com.missing.app', 'com.example.app', 'org.other.app'],
+      'includeIcons': true,
+    });
+    expect(find.text('Installed Apps (2)'), findsOneWidget);
+    expect(find.text('Found 2 requested apps'), findsOneWidget);
+    expect(
+      tester.getTopLeft(find.text('Other App')).dy,
+      lessThan(tester.getTopLeft(find.text('Example App')).dy),
+    );
+    await disposeExample(tester);
+  });
+
+  testWidgets('specific app lookup supports empty input and displays native failures', (
+    tester,
+  ) async {
+    await startExample(tester);
+    await tester.ensureVisible(find.text('Specific Apps'));
+    await tester.tap(find.text('Specific Apps'));
+    await tester.pumpAndSettle();
+    await press(tester, 'Load Specific Apps');
+    expect(calls.last.arguments, {'packageNames': <String>[], 'includeIcons': false});
+    expect(find.text('Installed Apps (0)'), findsOneWidget);
+    await tester.enterText(input('Package names'), 'com.error.app');
+    await press(tester, 'Load Specific Apps');
+    expect(find.textContaining('Error loading specific apps:'), findsOneWidget);
+    expect(tester.takeException(), isNull);
     await disposeExample(tester);
   });
 
