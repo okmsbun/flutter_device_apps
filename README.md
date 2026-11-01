@@ -7,15 +7,17 @@
 <a href="https://opensource.org/licenses/MIT"><img src="https://img.shields.io/badge/license-MIT-purple.svg" alt="License: MIT"></a>
 </p>
 
-A Flutter plugin to list, inspect, launch, and monitor installed Android apps.
+A Flutter plugin to list installed Android apps, get app icons, check installation
+status, launch apps, and monitor app changes. Also detects packaged frameworks.
 
 Requires Android API 24+, Flutter 3.44+, and Dart 3.12+.
 [API reference](https://pub.dev/documentation/flutter_device_apps/latest/flutter_device_apps/)
+· [Guide: List installed Android apps in Flutter](doc/list-installed-android-apps.md)
 
 Call `WidgetsFlutterBinding.ensureInitialized()` only when using APIs before `runApp()`.
 Calls from `initState()` and UI callbacks need no extra initialization.
 
-### List apps
+### List installed Android apps
 
 ```dart
 final apps = await FlutterDeviceApps.listApps(
@@ -29,7 +31,7 @@ final apps = await FlutterDeviceApps.listApps(
 
 Filters are case-sensitive and combined with AND; `null` or `''` disables each filter.
 
-### Get specific apps
+### Get apps by package name
 
 ```dart
 final app = await FlutterDeviceApps.getApp('com.whatsapp', includeIcon: true);
@@ -42,7 +44,7 @@ final apps = await FlutterDeviceApps.getApps(
 
 `getApp()` returns `null` if unavailable; `getApps()` returns `[]` when no apps are found.
 
-### Detect frameworks
+### Detect packaged app frameworks
 
 ```dart
 final frameworks = await FlutterDeviceApps.detectAppFrameworks('com.example.app');
@@ -52,7 +54,7 @@ Detects packaged indicators for **Flutter, React Native, Unity, Unreal Engine,
 Godot, and .NET Android**. This does not identify the app's primary UI framework.
 `[]` means no supported match; scan failures throw.
 
-### Listen to app changes
+### Listen to app install, update, and uninstall events
 
 ```dart
 final subscription = FlutterDeviceApps.appChanges.listen(
