@@ -73,6 +73,11 @@ void main() {
               for (final name in ['org.other.app', 'com.example.app'])
                 {...app(name), if (args['includeIcons'] == true) 'iconBytes': icon},
             ];
+          case 'detectAppFrameworks':
+            if (packageName == 'com.missing.app') throw PlatformException(code: 'APP_NOT_FOUND');
+            if (packageName == 'com.error.app') throw PlatformException(code: 'ERR_FRAMEWORK_SCAN');
+            if (packageName == 'com.no.framework') return <String>[];
+            return ['flutter', 'unity'];
           case 'getApp':
             if (packageName == 'com.missing.app') return null;
             return app(packageName! as String);
@@ -240,6 +245,40 @@ void main() {
     await tester.enterText(input('Package names'), 'com.error.app');
     await press(tester, 'Load Specific Apps');
     expect(find.textContaining('Error loading specific apps:'), findsOneWidget);
+    expect(tester.takeException(), isNull);
+    await disposeExample(tester);
+  });
+
+  testWidgets('framework detection is on demand and displays multiple or no matches', (
+    tester,
+  ) async {
+    await startExample(tester);
+    expect(calls.any((call) => call.method == 'detectAppFrameworks'), isFalse);
+    await tester.enterText(input('Package name'), 'com.example.app');
+    calls.clear();
+    await press(tester, 'Detect Frameworks');
+    expect(calls, hasLength(1));
+    expect(calls.single.method, 'detectAppFrameworks');
+    expect(calls.single.arguments, {'packageName': 'com.example.app'});
+    expect(find.text('flutter, unity'), findsOneWidget);
+
+    await tester.enterText(input('Package name'), 'com.no.framework');
+    await press(tester, 'Detect Frameworks');
+    expect(find.text('No supported indicators found'), findsOneWidget);
+    expect(find.text('flutter, unity'), findsNothing);
+    await disposeExample(tester);
+  });
+
+  testWidgets('framework scan failures are displayed separately from empty results', (
+    tester,
+  ) async {
+    await startExample(tester);
+    for (final packageName in ['com.error.app', 'com.missing.app']) {
+      await tester.enterText(input('Package name'), packageName);
+      await press(tester, 'Detect Frameworks');
+      expect(find.textContaining('Error detecting frameworks:'), findsOneWidget);
+      expect(find.text('No supported indicators found'), findsNothing);
+    }
     expect(tester.takeException(), isNull);
     await disposeExample(tester);
   });

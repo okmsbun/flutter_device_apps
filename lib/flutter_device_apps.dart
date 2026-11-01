@@ -6,7 +6,7 @@ import 'package:flutter_device_apps_platform_interface/flutter_device_apps_platf
 export 'package:flutter_device_apps_platform_interface/flutter_device_apps_app_change_event.dart'
     show AppChangeEvent, AppChangeType;
 export 'package:flutter_device_apps_platform_interface/flutter_device_apps_platform_interface.dart'
-    show AppInfo, AppInstallSourceInfo;
+    show AppFramework, AppInfo, AppInstallSourceInfo;
 
 /// Flutter plugin for listing/inspecting installed apps on Android and iOS devices.
 ///
@@ -61,6 +61,16 @@ class FlutterDeviceApps {
   /// Set [includeIcons] to load icons alongside app metadata (default: false).
   static Future<List<AppInfo>> getApps(List<String> packageNames, {bool includeIcons = false}) =>
       _p.getApps(packageNames, includeIcons: includeIcons);
+
+  /// Detects known framework library names in the base and installed split APKs.
+  ///
+  /// Returns unique matches in [AppFramework.values] order. An empty list means
+  /// no supported indicator was found after all APKs were read successfully.
+  /// Throws if [packageName] is blank, missing or hidden, or any APK cannot be
+  /// read. This on-demand scan identifies packaged components, not the app's
+  /// primary UI framework or technologies that are currently running.
+  static Future<List<AppFramework>> detectAppFrameworks(String packageName) =>
+      _p.detectAppFrameworks(packageName);
 
   /// Gets the app icon as PNG bytes without loading the full app metadata.
   ///

@@ -31,6 +31,9 @@ void main() {
             {'packageName': 'com.example.user'},
           ];
         }
+        if (call.method == 'detectAppFrameworks') {
+          return ['flutter', 'reactNative', 'unity', 'unrealEngine', 'godot', 'dotnetAndroid'];
+        }
         final Object? packageName = args['packageName'];
         if (call.method == 'isAppInstalled') return packageName != 'com.example.missing';
         if (call.method == 'isAppLaunchable') return packageName == 'com.example.user';
@@ -114,6 +117,16 @@ void main() {
       'packageNames': ['com.example.second', 'com.example.user'],
       'includeIcons': false,
     });
+  });
+
+  test('public framework detection decodes all types through a single native request', () async {
+    final List<AppFramework> frameworks = await FlutterDeviceApps.detectAppFrameworks(
+      'com.example.app',
+    );
+    expect(frameworks, AppFramework.values);
+    expect(calls, hasLength(1));
+    expect(calls.single.method, 'detectAppFrameworks');
+    expect(calls.single.arguments, {'packageName': 'com.example.app'});
   });
 
   test('public icon query returns bytes and null without fetching metadata', () async {

@@ -257,6 +257,33 @@ class _AppManagerScreenState extends State<AppManagerScreen> {
     }
   }
 
+  Future<void> _detectAppFrameworks() async {
+    final packageName = _queryPackageName();
+    if (packageName == null) return;
+    setState(() {
+      _queryLoading = true;
+      _queryResults.remove('Frameworks');
+      _statusMessage = 'Scanning framework indicators for $packageName...';
+    });
+    try {
+      final List<AppFramework> frameworks = await FlutterDeviceApps.detectAppFrameworks(
+        packageName,
+      );
+      if (!mounted) return;
+      setState(() {
+        _queryResults['Frameworks'] = frameworks.isEmpty
+            ? 'No supported indicators found'
+            : frameworks.map((framework) => framework.name).join(', ');
+        _statusMessage = 'Framework scan complete';
+      });
+    } catch (e) {
+      if (!mounted) return;
+      setState(() => _statusMessage = 'Error detecting frameworks: $e');
+    } finally {
+      if (mounted) setState(() => _queryLoading = false);
+    }
+  }
+
   Future<void> _getAppIcon() async {
     final packageName = _queryPackageName();
     if (packageName == null) return;
@@ -763,6 +790,10 @@ class _AppManagerScreenState extends State<AppManagerScreen> {
             ElevatedButton(
               onPressed: _canQueryPackage ? _getInstallSourceInfo : null,
               child: const Text('Install Source'),
+            ),
+            ElevatedButton(
+              onPressed: _canQueryPackage ? _detectAppFrameworks : null,
+              child: const Text('Detect Frameworks'),
             ),
             ElevatedButton(
               onPressed: _canQueryPackage
