@@ -1,87 +1,54 @@
-# How to list installed Android apps in Flutter
+# List installed Android apps in Flutter with flutter_device_apps
 
-Use [flutter_device_apps](https://pub.dev/packages/flutter_device_apps) to list
-installed apps, read app names and package names, and display app icons on Android.
-Requires Android API 24+, Flutter 3.44+, and Dart 3.12+.
+Call `FlutterDeviceAppsAndroid.listApps()` to get installed apps visible to your
+Flutter app. The main package also exposes `FlutterDeviceAppsMacos` for apps that
+run on both platforms.
 
-## Install the plugin
+Requires Flutter 3.44+, Dart 3.12+, and Android API 24+ or macOS 12+.
+
+## List installed apps on Android and macOS
 
 ```bash
 flutter pub add flutter_device_apps
 ```
 
-## Display installed apps with icons
-
-This example lists visible, launchable user apps. Set `includeSystem: true` to
-include system apps or `onlyLaunchable: false` to include apps without a launcher
-entry, subject to Android package visibility.
-
-Replace `lib/main.dart` with:
-
 ```dart
-import 'dart:typed_data';
-
-import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_device_apps/flutter_device_apps.dart';
 
-Future<void> main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  final List<AppInfo> apps = await FlutterDeviceApps.listApps(includeIcons: true);
+Future<List<String>> listInstalledAppNames() async {
+  if (kIsWeb) return [];
 
-  runApp(
-    MaterialApp(
-      home: Scaffold(
-        appBar: AppBar(title: const Text('Installed Android apps')),
-        body: ListView.builder(
-          itemCount: apps.length,
-          itemBuilder: (context, index) {
-            final AppInfo app = apps[index];
-            final Uint8List? icon = app.iconBytes;
-            return ListTile(
-              leading: icon == null
-                  ? const Icon(Icons.android)
-                  : Image.memory(icon, width: 40, height: 40),
-              title: Text(app.appName ?? app.packageName ?? 'Unknown app'),
-              subtitle: Text(app.packageName ?? ''),
-            );
-          },
-        ),
-      ),
-    ),
-  );
+  return switch (defaultTargetPlatform) {
+    TargetPlatform.android => [
+      for (final app in await FlutterDeviceAppsAndroid.listApps())
+        app.appName ?? app.packageName ?? 'Unknown app',
+    ],
+    TargetPlatform.macOS => [
+      for (final app in await FlutterDeviceAppsMacos.listApps())
+        app.appName ?? app.bundleIdentifier ?? app.appPath ?? 'Unknown app',
+    ],
+    _ => [],
+  };
 }
 ```
 
-`ensureInitialized()` is needed here because the plugin is called before
-`runApp()`. Calls from `initState()` or UI callbacks need no extra initialization.
-Icons are optional; leave `includeIcons` off when you only need metadata.
+Call this from an initialized Flutter app, such as in `initState()` or a button
+callback. The example returns display names. The platform APIs also return
+Android package names, macOS bundle identifiers, and optional PNG icons.
 
-## Check or launch an app by package name
+Android package visibility controls which apps appear. macOS discovery depends
+on search folders and App Sandbox access. Both lists exclude system apps by
+default.
 
-```dart
-final installed = await FlutterDeviceApps.isAppInstalled('com.whatsapp');
-if (installed) {
-  await FlutterDeviceApps.openApp('com.whatsapp');
-}
-```
+## Upgrade from flutter_device_apps 1.x
 
-## Android package visibility
+Replace `FlutterDeviceApps` with `FlutterDeviceAppsAndroid` for Android calls.
+Use the platform-specific types in new code, such as `AndroidAppInfo` and
+`AndroidAppChangeEvent`. The former Android names remain available as
+deprecated aliases in 2.0.0.
 
-Android can hide installed packages from your app. The plugin includes visibility
-for launcher apps. For a specific package, add a declaration inside `<manifest>`
-and outside `<application>` in `android/app/src/main/AndroidManifest.xml`:
+## Platform guides
 
-```xml
-<queries>
-    <package android:name="com.whatsapp" />
-</queries>
-```
-
-Hidden packages can be omitted from lists, and `isAppInstalled()` can return
-`false` even when the app is installed. See
-[Android package visibility](https://developer.android.com/training/package-visibility/declaring)
-and the [Android setup notes](../README.md#android-setup) for broader queries.
-
-For batch lookups, framework detection, and app change events, see the
-[README](../README.md) and
-[API reference](https://pub.dev/documentation/flutter_device_apps/latest/flutter_device_apps/).
+- [List Android apps with icons and configure package visibility](https://github.com/okmsbun/flutter_device_apps_android/blob/HEAD/doc/list-installed-android-apps.md)
+- [List macOS apps and configure App Sandbox access](https://github.com/okmsbun/flutter_device_apps_macos/blob/HEAD/doc/api-capabilities.md)
