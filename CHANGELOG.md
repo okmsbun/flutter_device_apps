@@ -1,8 +1,9 @@
 ## 2.0.0
 
-- Added macOS support through `FlutterDeviceAppsMacos` and `MacosAppInfo`.
-- Uses the standalone Android plugin and deprecates `FlutterDeviceApps` and the legacy Android type names.
-- Updated the example to list apps on Android and macOS.
+- Added macOS app discovery and management through `FlutterDeviceAppsMacos`, re-exported from the main package.
+- Re-exported the standalone Android plugin as `FlutterDeviceAppsAndroid` and removed the `flutter_device_apps_platform_interface` dependency.
+- Deprecated `FlutterDeviceApps` and the legacy Android type names. Existing names remain available as aliases for `FlutterDeviceAppsAndroid` and the `AndroidApp*` types.
+- Updated the example and installed apps guide to use one import for Android and macOS.
 
 ## 1.1.0
 
