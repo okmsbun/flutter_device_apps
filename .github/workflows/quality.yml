@@ -2,7 +2,7 @@ name: Quality
 
 on:
   pull_request:
-    branches: ["develop"]
+    branches: ["develop", "main"]
 
 jobs:
   quality:
@@ -31,10 +31,13 @@ jobs:
         run: flutter pub get
 
       - name: Check formatting
+        if: github.base_ref == 'develop'
         run: dart format --set-exit-if-changed .
 
       - name: Static analysis
+        if: github.base_ref == 'develop'
         run: flutter analyze
 
       - name: pub.dev dry-run
+        if: github.base_ref == 'main'
         run: dart pub publish --dry-run
