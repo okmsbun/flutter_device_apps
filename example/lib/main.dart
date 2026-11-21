@@ -2,6 +2,8 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_device_apps/flutter_device_apps.dart';
 import 'package:material_ui/material_ui.dart';
 
+typedef _AppEntry = ({String? name, String? identifier});
+
 void main() {
   runApp(const MainApp());
 }
@@ -11,41 +13,59 @@ class MainApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isAndroid = !kIsWeb && defaultTargetPlatform == TargetPlatform.android;
+    final loadApps = kIsWeb
+        ? null
+        : switch (defaultTargetPlatform) {
+            TargetPlatform.android => _listAndroidApps,
+            TargetPlatform.macOS => _listMacosApps,
+            _ => null,
+          };
     return MaterialApp(
       title: 'Flutter Device Apps',
-      home: isAndroid
-          ? const _InstalledAppsScreen()
-          : const Scaffold(body: Center(child: Text('This example requires Android.'))),
+      home: loadApps == null
+          ? const Scaffold(body: Center(child: Text('This example requires Android or macOS.')))
+          : _InstalledAppsScreen(loadApps: loadApps),
     );
   }
+
+  static Future<List<_AppEntry>> _listAndroidApps() async => [
+    for (final app in await FlutterDeviceAppsAndroid.listApps())
+      (name: app.appName, identifier: app.packageName),
+  ];
+
+  static Future<List<_AppEntry>> _listMacosApps() async => [
+    for (final app in await FlutterDeviceAppsMacos.listApps())
+      (name: app.appName, identifier: app.bundleIdentifier ?? app.appPath),
+  ];
 }
 
 class _InstalledAppsScreen extends StatefulWidget {
-  const _InstalledAppsScreen();
+  const _InstalledAppsScreen({required this.loadApps});
+
+  final Future<List<_AppEntry>> Function() loadApps;
 
   @override
   State<_InstalledAppsScreen> createState() => _InstalledAppsScreenState();
 }
 
 class _InstalledAppsScreenState extends State<_InstalledAppsScreen> {
-  late Future<List<AndroidAppInfo>> _apps;
+  late Future<List<_AppEntry>> _apps;
 
   @override
   void initState() {
     super.initState();
-    _apps = FlutterDeviceAppsAndroid.listApps();
+    _apps = widget.loadApps();
   }
 
   void _refresh() {
     setState(() {
-      _apps = FlutterDeviceAppsAndroid.listApps();
+      _apps = widget.loadApps();
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<List<AndroidAppInfo>>(
+    return FutureBuilder<List<_AppEntry>>(
       future: _apps,
       builder: (context, snapshot) => Scaffold(
         appBar: AppBar(
@@ -63,7 +83,7 @@ class _InstalledAppsScreenState extends State<_InstalledAppsScreen> {
     );
   }
 
-  Widget _buildAppList(AsyncSnapshot<List<AndroidAppInfo>> snapshot) {
+  Widget _buildAppList(AsyncSnapshot<List<_AppEntry>> snapshot) {
     if (snapshot.connectionState != ConnectionState.done) {
       return const Center(child: CircularProgressIndicator(semanticsLabel: 'Loading apps'));
     }
@@ -79,10 +99,10 @@ class _InstalledAppsScreenState extends State<_InstalledAppsScreen> {
       itemCount: apps.length,
       itemBuilder: (context, index) {
         final app = apps[index];
-        final packageName = app.packageName;
+        final identifier = app.identifier;
         return ListTile(
-          title: Text(app.appName ?? 'Unknown app'),
-          subtitle: packageName == null ? null : Text(packageName),
+          title: Text(app.name ?? 'Unknown app'),
+          subtitle: identifier == null ? null : Text(identifier),
         );
       },
     );

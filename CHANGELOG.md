@@ -1,3 +1,9 @@
+## 2.0.0
+
+- Added macOS support through `FlutterDeviceAppsMacos` and `MacosAppInfo`.
+- Uses the standalone Android plugin and deprecates `FlutterDeviceApps` and the legacy Android type names.
+- Updated the example to list apps on Android and macOS.
+
 ## 1.1.0
 
 - **BREAKING**: Removed `getInstallerStore`; use `getInstallSourceInfo`.
