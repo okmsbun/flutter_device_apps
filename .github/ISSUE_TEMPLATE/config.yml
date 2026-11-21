@@ -1,5 +1,0 @@
-blank_issues_enabled: true
-contact_links:
-  - name: Report a security vulnerability
-    url: https://github.com/okmsbun/flutter_device_apps/security/advisories/new
-    about: Send a private security report to the maintainer.

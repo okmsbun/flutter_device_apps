@@ -21,6 +21,10 @@ for `FlutterDeviceAppsAndroid`.
 Find platform-specific usage in the [Android README](https://github.com/okmsbun/flutter_device_apps_android#readme)
 and the [macOS README](https://github.com/okmsbun/flutter_device_apps_macos#readme).
 
+## Community Standards
+
+[Contributing](CONTRIBUTING.md) · [Code of Conduct](CODE_OF_CONDUCT.md) · [Security Policy](SECURITY.md)
+
 ## License
 
 [MIT](LICENSE) © 2026 okmsbun
