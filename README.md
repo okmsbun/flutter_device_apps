@@ -7,7 +7,7 @@
 <a href="https://opensource.org/licenses/MIT"><img src="https://img.shields.io/badge/license-MIT-purple.svg" alt="License: MIT"></a>
 </p>
 
-A Flutter package that provides a single entry point for platform-specific device app APIs.
+List installed apps and access Android and macOS app management APIs from one Flutter import.
 
 ## Requirements
 
@@ -26,6 +26,8 @@ for `FlutterDeviceAppsAndroid`.
 
 Find platform-specific usage in the [Android README](https://github.com/okmsbun/flutter_device_apps_android#readme)
 and the [macOS README](https://github.com/okmsbun/flutter_device_apps_macos#readme).
+See the [guide to listing installed apps on Android and macOS](doc/list-installed-android-apps.md)
+for an example using one import.
 
 ## Community Standards
 

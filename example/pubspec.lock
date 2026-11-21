@@ -75,13 +75,14 @@ packages:
       path: "../../flutter_device_apps_android"
       relative: true
     source: path
-    version: "2.0.0"
+    version: "2.1.0"
   flutter_device_apps_macos:
     dependency: transitive
     description:
-      path: "../../flutter_device_apps_macos"
-      relative: true
-    source: path
+      name: flutter_device_apps_macos
+      sha256: "2cad741c0c0f29b565070c38079b2570d572037533f7f1ca5037c9e29542231f"
+      url: "https://pub.dev"
+    source: hosted
     version: "1.0.0"
   flutter_lints:
     dependency: "direct dev"

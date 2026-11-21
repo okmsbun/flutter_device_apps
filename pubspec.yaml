@@ -19,7 +19,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  flutter_device_apps_android: ^2.0.0
+  flutter_device_apps_android: ^2.1.0
   flutter_device_apps_macos: ^1.0.0
 
 dev_dependencies:
