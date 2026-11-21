@@ -12,12 +12,14 @@ A Flutter package that provides a single entry point for platform-specific devic
 | Platform | Package                                                                             | API                        |
 | -------- | ----------------------------------------------------------------------------------- | -------------------------- |
 | Android  | [flutter_device_apps_android](https://pub.dev/packages/flutter_device_apps_android) | `FlutterDeviceAppsAndroid` |
+| macOS    | [flutter_device_apps_macos](https://pub.dev/packages/flutter_device_apps_macos)     | `FlutterDeviceAppsMacos`   |
 
-Import `package:flutter_device_apps/flutter_device_apps.dart` to use the Android API
-through the main package. Existing `FlutterDeviceApps` calls use a deprecated alias
+Import `package:flutter_device_apps/flutter_device_apps.dart` to access both platform APIs.
+Existing `FlutterDeviceApps` calls use a deprecated alias
 for `FlutterDeviceAppsAndroid`.
 
-Find installation, usage, and Android setup in the [Android package README](https://github.com/okmsbun/flutter_device_apps_android#readme).
+Find platform-specific usage in the [Android README](https://github.com/okmsbun/flutter_device_apps_android#readme)
+and the [macOS README](https://github.com/okmsbun/flutter_device_apps_macos#readme).
 
 ## License
 

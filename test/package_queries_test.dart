@@ -2,6 +2,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_device_apps/flutter_device_apps.dart' as legacy;
 import 'package:flutter_device_apps/flutter_device_apps_android.dart';
 import 'package:flutter_device_apps_android/flutter_device_apps_android.dart' as android;
+import 'package:flutter_device_apps_macos/flutter_device_apps_macos.dart' as macos;
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
@@ -28,9 +29,11 @@ void main() {
     expect(calls.single.method, 'listApps');
   });
 
-  test('the main imports expose the standalone Android class', () {
+  test('the main imports expose the standalone platform APIs', () {
     expect(legacy.FlutterDeviceAppsAndroid, same(android.FlutterDeviceAppsAndroid));
     expect(FlutterDeviceAppsAndroid, same(android.FlutterDeviceAppsAndroid));
+    expect(legacy.FlutterDeviceAppsMacos, same(macos.FlutterDeviceAppsMacos));
+    expect(legacy.MacosAppInfo, same(macos.MacosAppInfo));
   });
 
   test('legacy model names resolve to the same Android types', () {

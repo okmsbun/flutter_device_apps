@@ -76,6 +76,13 @@ packages:
       relative: true
     source: path
     version: "2.0.0"
+  flutter_device_apps_macos:
+    dependency: transitive
+    description:
+      path: "../../flutter_device_apps_macos"
+      relative: true
+    source: path
+    version: "1.0.0"
   flutter_lints:
     dependency: "direct dev"
     description:
