@@ -32,7 +32,7 @@ void main() {
           ];
         }
         if (call.method == 'detectAppFrameworks') {
-          return ['flutter', 'reactNative', 'unity', 'unrealEngine', 'godot', 'dotnetAndroid'];
+          return ['flutter', 'jetpackCompose', 'kotlin'];
         }
         final Object? packageName = args['packageName'];
         if (call.method == 'isAppInstalled') return packageName != 'com.example.missing';
@@ -123,7 +123,7 @@ void main() {
     final List<AppFramework> frameworks = await FlutterDeviceApps.detectAppFrameworks(
       'com.example.app',
     );
-    expect(frameworks, AppFramework.values);
+    expect(frameworks, [AppFramework.flutter, AppFramework.jetpackCompose, AppFramework.kotlin]);
     expect(calls, hasLength(1));
     expect(calls.single.method, 'detectAppFrameworks');
     expect(calls.single.arguments, {'packageName': 'com.example.app'});
