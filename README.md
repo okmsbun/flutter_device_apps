@@ -9,10 +9,16 @@
 
 A Flutter package that provides a single entry point for platform-specific device app APIs.
 
-| Platform | Package                                                                             | API                        |
-| -------- | ----------------------------------------------------------------------------------- | -------------------------- |
-| Android  | [flutter_device_apps_android](https://pub.dev/packages/flutter_device_apps_android) | `FlutterDeviceAppsAndroid` |
-| macOS    | [flutter_device_apps_macos](https://pub.dev/packages/flutter_device_apps_macos)     | `FlutterDeviceAppsMacos`   |
+## Requirements
+
+Requires Flutter 3.44+ and Dart 3.12+.
+
+## Platforms
+
+| Platform | Minimum OS | Package                                                                             | API                        |
+| -------- | ---------- | ----------------------------------------------------------------------------------- | -------------------------- |
+| Android  | API 24     | [flutter_device_apps_android](https://pub.dev/packages/flutter_device_apps_android) | `FlutterDeviceAppsAndroid` |
+| macOS    | macOS 12   | [flutter_device_apps_macos](https://pub.dev/packages/flutter_device_apps_macos)     | `FlutterDeviceAppsMacos`   |
 
 Import `package:flutter_device_apps/flutter_device_apps.dart` to access both platform APIs.
 Existing `FlutterDeviceApps` calls use a deprecated alias
@@ -23,7 +29,7 @@ and the [macOS README](https://github.com/okmsbun/flutter_device_apps_macos#read
 
 ## Community Standards
 
-[Contributing](CONTRIBUTING.md) · [Code of Conduct](CODE_OF_CONDUCT.md) · [Security Policy](SECURITY.md)
+[Issues](https://github.com/okmsbun/flutter_device_apps/issues) · [Contributing](CONTRIBUTING.md) · [Code of Conduct](CODE_OF_CONDUCT.md) · [Security Policy](SECURITY.md)
 
 ## License
 

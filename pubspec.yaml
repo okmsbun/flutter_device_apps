@@ -1,7 +1,5 @@
 name: flutter_device_apps
-description: >-
-  Flutter plugin to list installed Android apps, get app icons,
-  check installation status, launch apps, and detect packaged frameworks.
+description: A single Flutter entry point for app discovery and management on Android and macOS.
 version: 2.0.0
 repository: https://github.com/okmsbun/flutter_device_apps
 issue_tracker: https://github.com/okmsbun/flutter_device_apps/issues
