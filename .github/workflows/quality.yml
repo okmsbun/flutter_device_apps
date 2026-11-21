@@ -35,6 +35,3 @@ jobs:
 
       - name: Static analysis
         run: flutter analyze
-
-      - name: pub.dev dry-run
-        run: dart pub publish --dry-run

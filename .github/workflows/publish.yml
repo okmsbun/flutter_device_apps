@@ -1,0 +1,72 @@
+name: Publish to pub.dev
+
+on:
+  push:
+    branches: ["main"]
+
+permissions:
+  contents: read
+
+jobs:
+  check-version:
+    runs-on: ubuntu-latest
+    outputs:
+      unpublished: ${{ steps.version.outputs.unpublished }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - name: Check pub.dev version
+        id: version
+        shell: bash
+        run: |
+          package=$(ruby -ryaml -e 'puts YAML.safe_load_file("pubspec.yaml").fetch("name")')
+          version=$(ruby -ryaml -e 'puts YAML.safe_load_file("pubspec.yaml").fetch("version")')
+          status=$(curl -sS --retry 3 --max-time 20 -o /dev/null -w '%{http_code}' \
+            "https://pub.dev/api/packages/$package/versions/$version")
+
+          case "$status" in
+            200) echo "$package $version is already published." ;;
+            404) echo 'unpublished=true' >> "$GITHUB_OUTPUT" ;;
+            *) echo "::error::pub.dev version check returned HTTP $status."; exit 1 ;;
+          esac
+
+  publish:
+    needs: check-version
+    if: needs.check-version.outputs.unpublished == 'true'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          cache: true
+
+      - name: pub.dev dry-run
+        run: flutter pub publish --dry-run
+
+      - name: Authenticate with Google Cloud
+        id: auth
+        uses: google-github-actions/auth@v3
+        with:
+          workload_identity_provider: ${{ secrets.PUBDEV_WORKLOAD_IDENTITY_PROVIDER }}
+          service_account: ${{ secrets.PUBDEV_SERVICE_ACCOUNT }}
+          create_credentials_file: false
+          token_format: id_token
+          id_token_audience: https://pub.dev
+          id_token_include_email: true
+
+      - name: Publish to pub.dev
+        env:
+          PUBDEV_ID_TOKEN: ${{ steps.auth.outputs.id_token }}
+        run: |
+          dart pub token add https://pub.dev --env-var PUBDEV_ID_TOKEN
+          flutter pub publish --force
