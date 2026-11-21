@@ -2,8 +2,6 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_device_apps_android/flutter_device_apps_android.dart';
-import 'package:flutter_device_apps_platform_interface/flutter_device_apps_platform_interface.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 // The example is a separate app, so it has no library in this package to import.
@@ -19,7 +17,6 @@ void main() {
   final Uint8List icon = base64Decode(
     'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+j2ioAAAAASUVORK5CYII=',
   );
-  late FlutterDeviceAppsPlatform originalPlatform;
   late List<MethodCall> calls;
   late List<String> eventCalls;
 
@@ -45,7 +42,6 @@ void main() {
   };
 
   setUp(() {
-    originalPlatform = FlutterDeviceAppsPlatform.instance;
     calls = [];
     eventCalls = [];
     messenger
@@ -120,7 +116,6 @@ void main() {
   });
 
   tearDown(() {
-    FlutterDeviceAppsPlatform.instance = originalPlatform;
     messenger
       ..setMockMethodCallHandler(methods, null)
       ..setMockMethodCallHandler(events, null);
@@ -131,7 +126,6 @@ void main() {
   );
 
   Future<void> startExample(WidgetTester tester, {Size size = const Size(1200, 1000)}) async {
-    FlutterDeviceAppsAndroid.registerWith();
     await tester.binding.setSurfaceSize(size);
     addTearDown(() => tester.binding.setSurfaceSize(null));
     await tester.pumpWidget(const MainApp());
