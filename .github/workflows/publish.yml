@@ -57,8 +57,8 @@ jobs:
         id: auth
         uses: google-github-actions/auth@v3
         with:
-          workload_identity_provider: ${{ vars.PUBDEV_WORKLOAD_IDENTITY_PROVIDER }}
-          service_account: ${{ vars.PUBDEV_SERVICE_ACCOUNT }}
+          workload_identity_provider: ${{ secrets.PUBDEV_WORKLOAD_IDENTITY_PROVIDER }}
+          service_account: ${{ secrets.PUBDEV_SERVICE_ACCOUNT }}
           create_credentials_file: false
           token_format: id_token
           id_token_audience: https://pub.dev
