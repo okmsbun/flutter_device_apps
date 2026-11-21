@@ -77,7 +77,7 @@ void main() {
             if (packageName == 'com.missing.app') throw PlatformException(code: 'APP_NOT_FOUND');
             if (packageName == 'com.error.app') throw PlatformException(code: 'ERR_FRAMEWORK_SCAN');
             if (packageName == 'com.no.framework') return <String>[];
-            return ['flutter', 'unity'];
+            return ['flutter', 'jetpackCompose', 'kotlin'];
           case 'getApp':
             if (packageName == 'com.missing.app') return null;
             return app(packageName! as String);
@@ -260,12 +260,12 @@ void main() {
     expect(calls, hasLength(1));
     expect(calls.single.method, 'detectAppFrameworks');
     expect(calls.single.arguments, {'packageName': 'com.example.app'});
-    expect(find.text('flutter, unity'), findsOneWidget);
+    expect(find.text('flutter, jetpackCompose, kotlin'), findsOneWidget);
 
     await tester.enterText(input('Package name'), 'com.no.framework');
     await press(tester, 'Detect Frameworks');
     expect(find.text('No supported indicators found'), findsOneWidget);
-    expect(find.text('flutter, unity'), findsNothing);
+    expect(find.text('flutter, jetpackCompose, kotlin'), findsNothing);
     await disposeExample(tester);
   });
 

@@ -65,10 +65,11 @@ class FlutterDeviceApps {
   static Future<List<AppInfo>> getApps(List<String> packageNames, {bool includeIcons = false}) =>
       _p.getApps(packageNames, includeIcons: includeIcons);
 
-  /// Detects packaged frameworks in an installed Android app's APKs.
+  /// Detects packaged frameworks and runtime components in an Android app.
   ///
-  /// Checks known native library names for Flutter, React Native, Unity,
-  /// Unreal Engine, Godot, and .NET Android in the base and installed split APKs.
+  /// Checks known native library, metadata, and asset paths in the base and
+  /// installed split APKs. A match may come from a dependency, such as Kotlin's
+  /// standard library or AndroidX AppCompat.
   ///
   /// Returns unique matches in [AppFramework.values] order. An empty list means
   /// no supported indicator was found after all APKs were read successfully.
