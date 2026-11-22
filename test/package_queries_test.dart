@@ -2,6 +2,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_device_apps/flutter_device_apps.dart' as legacy;
 import 'package:flutter_device_apps/flutter_device_apps_android.dart';
 import 'package:flutter_device_apps_android/flutter_device_apps_android.dart' as android;
+import 'package:flutter_device_apps_linux/flutter_device_apps_linux.dart' as linux;
 import 'package:flutter_device_apps_macos/flutter_device_apps_macos.dart' as macos;
 import 'package:flutter_test/flutter_test.dart';
 
@@ -34,18 +35,22 @@ void main() {
     expect(FlutterDeviceAppsAndroid, same(android.FlutterDeviceAppsAndroid));
     expect(legacy.FlutterDeviceAppsMacos, same(macos.FlutterDeviceAppsMacos));
     expect(legacy.MacosAppInfo, same(macos.MacosAppInfo));
+    expect(legacy.FlutterDeviceAppsLinux, same(linux.FlutterDeviceAppsLinux));
+    expect(legacy.LinuxAppInfo, same(linux.LinuxAppInfo));
   });
 
   test('legacy model names resolve to the same Android types', () {
     // Exercise the compatibility exports through the app-facing API.
     // ignore: deprecated_member_use
-    final aliases = [AppInfo, AppInstallSourceInfo, AppFramework, AppChangeEvent, AppChangeType];
+    final aliases = [AppInfo, AppInstallSourceInfo, AppChangeEvent, AppChangeType];
     expect(aliases, [
       AndroidAppInfo,
       AndroidAppInstallSourceInfo,
-      AndroidAppFramework,
       AndroidAppChangeEvent,
       AndroidAppChangeType,
     ]);
+    // Verify the compatibility export for callers of the deprecated flat API.
+    // ignore: deprecated_member_use
+    expect(AppFramework, same(AndroidAppFramework));
   });
 }

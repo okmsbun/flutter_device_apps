@@ -18,12 +18,15 @@ class MainApp extends StatelessWidget {
         : switch (defaultTargetPlatform) {
             TargetPlatform.android => _listAndroidApps,
             TargetPlatform.macOS => _listMacosApps,
+            TargetPlatform.linux => _listLinuxApps,
             _ => null,
           };
     return MaterialApp(
       title: 'Flutter Device Apps',
       home: loadApps == null
-          ? const Scaffold(body: Center(child: Text('This example requires Android or macOS.')))
+          ? const Scaffold(
+              body: Center(child: Text('This example requires Android, macOS, or Linux.')),
+            )
           : _InstalledAppsScreen(loadApps: loadApps),
     );
   }
@@ -36,6 +39,11 @@ class MainApp extends StatelessWidget {
   static Future<List<_AppEntry>> _listMacosApps() async => [
     for (final app in await FlutterDeviceAppsMacos.listApps())
       (name: app.appName, identifier: app.bundleIdentifier ?? app.appPath),
+  ];
+
+  static Future<List<_AppEntry>> _listLinuxApps() async => [
+    for (final app in await FlutterDeviceAppsLinux.listApps())
+      (name: app.appName, identifier: app.desktopFileId),
   ];
 }
 

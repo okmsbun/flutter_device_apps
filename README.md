@@ -7,7 +7,8 @@
 <a href="https://opensource.org/licenses/MIT"><img src="https://img.shields.io/badge/license-MIT-purple.svg" alt="License: MIT"></a>
 </p>
 
-List installed apps and access Android and macOS app management APIs from one Flutter import.
+List installed apps in Flutter on Android, macOS, and Linux with one import.
+Get app icons and metadata, launch apps, and detect the technologies they use.
 
 ## Requirements
 
@@ -15,19 +16,28 @@ Requires Flutter 3.44+ and Dart 3.12+.
 
 ## Platforms
 
-| Platform | Minimum OS | Package                                                                             | API                        |
-| -------- | ---------- | ----------------------------------------------------------------------------------- | -------------------------- |
-| Android  | API 24     | [flutter_device_apps_android](https://pub.dev/packages/flutter_device_apps_android) | `FlutterDeviceAppsAndroid` |
-| macOS    | macOS 12   | [flutter_device_apps_macos](https://pub.dev/packages/flutter_device_apps_macos)     | `FlutterDeviceAppsMacos`   |
+| Platform | Requirements | Features and platform guide |
+| --- | --- | --- |
+| Android | API 24+ | List visible packages, inspect APK technologies, and watch app install or removal events. [Android package](https://pub.dev/packages/flutter_device_apps_android) |
+| macOS | macOS 12+ | Discover app bundles, inspect Mach-O dependencies, and find apps that handle a file. [macOS package](https://pub.dev/packages/flutter_device_apps_macos) |
+| Linux | GTK 3 and GIO | Search desktop apps, check MIME handlers, and read AppStream metadata and ELF dependencies. [Linux package](https://pub.dev/packages/flutter_device_apps_linux) |
 
-Import `package:flutter_device_apps/flutter_device_apps.dart` to access both platform APIs.
-Existing `FlutterDeviceApps` calls use a deprecated alias
-for `FlutterDeviceAppsAndroid`.
+## Usage
 
-Find platform-specific usage in the [Android README](https://github.com/okmsbun/flutter_device_apps_android#readme)
-and the [macOS README](https://github.com/okmsbun/flutter_device_apps_macos#readme).
-See the [guide to listing installed apps on Android and macOS](doc/list-installed-android-apps.md)
-for an example using one import.
+```sh
+flutter pub add flutter_device_apps
+```
+
+```dart
+import 'package:flutter_device_apps/flutter_device_apps.dart';
+```
+
+Use `FlutterDeviceAppsAndroid.listApps()`, `FlutterDeviceAppsMacos.listApps()`,
+or `FlutterDeviceAppsLinux.listApps()` on the matching platform. Existing
+`FlutterDeviceApps` calls still resolve to the deprecated Android alias.
+
+See the [installed apps guide](doc/list-installed-android-apps.md) for a shared
+listing example. Each platform package has its own setup and API documentation.
 
 ## Community Standards
 

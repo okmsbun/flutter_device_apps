@@ -1,3 +1,9 @@
+## 2.1.0
+
+- Added Linux desktop app discovery and management through `FlutterDeviceAppsLinux`.
+- Updated Android to `2.2.0` and macOS to `1.1.0` with categorized app technology detection.
+- Updated the example and platform overview to cover Android, macOS, and Linux.
+
 ## 2.0.0
 
 - Added macOS app discovery and management through `FlutterDeviceAppsMacos`, re-exported from the main package.
