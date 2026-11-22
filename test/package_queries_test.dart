@@ -39,13 +39,15 @@ void main() {
   test('legacy model names resolve to the same Android types', () {
     // Exercise the compatibility exports through the app-facing API.
     // ignore: deprecated_member_use
-    final aliases = [AppInfo, AppInstallSourceInfo, AppFramework, AppChangeEvent, AppChangeType];
+    final aliases = [AppInfo, AppInstallSourceInfo, AppChangeEvent, AppChangeType];
     expect(aliases, [
       AndroidAppInfo,
       AndroidAppInstallSourceInfo,
-      AndroidAppFramework,
       AndroidAppChangeEvent,
       AndroidAppChangeType,
     ]);
+    // Verify the compatibility export for callers of the deprecated flat API.
+    // ignore: deprecated_member_use
+    expect(AppFramework, same(AndroidAppFramework));
   });
 }
