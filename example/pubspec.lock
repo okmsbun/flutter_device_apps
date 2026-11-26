@@ -76,22 +76,23 @@ packages:
       path: ".."
       relative: true
     source: path
-    version: "2.1.0"
+    version: "2.2.0"
   flutter_device_apps_android:
-    dependency: "direct overridden"
+    dependency: transitive
     description:
-      path: "../../flutter_device_apps_android"
-      relative: true
-    source: path
+      name: flutter_device_apps_android
+      sha256: "351de4b33e46777580bc2a469eaa202dc6e6c09bac86c003c6a1e9093620a378"
+      url: "https://pub.dev"
+    source: hosted
     version: "2.2.0"
   flutter_device_apps_linux:
     dependency: transitive
     description:
       name: flutter_device_apps_linux
-      sha256: afb0457b1c3eb5d401a9394d29324b8aee435821b0fb7acee00cdd4c258ead98
+      sha256: e64be1d858c45619610483a2d20c8d94e8bc517aa66b888cf78065699bb8a36b
       url: "https://pub.dev"
     source: hosted
-    version: "1.0.0"
+    version: "1.1.1"
   flutter_device_apps_macos:
     dependency: transitive
     description:

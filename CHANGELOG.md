@@ -1,3 +1,9 @@
+## 2.2.0
+
+- Updated `flutter_device_apps_linux` to `^1.1.1`, exposing `FlutterDeviceAppsLinux.discoverApps()` and its strongly typed multi-source Linux discovery models through the main package export.
+- Preserved `FlutterDeviceAppsLinux.listApps()` and all existing Android and macOS dependencies and APIs.
+- Updated documentation and export tests for Linux multi-source discovery.
+
 ## 2.1.0
 
 - Added Linux desktop app discovery and management through `FlutterDeviceAppsLinux`.

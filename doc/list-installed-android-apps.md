@@ -42,7 +42,9 @@ Android package names, macOS bundle identifiers, and Linux desktop file IDs.
 
 Android package visibility controls which apps appear. macOS discovery depends
 on search folders and App Sandbox access. Linux lists desktop entries visible
-in the GIO session.
+in the GIO session with `listApps()`, and `FlutterDeviceAppsLinux.discoverApps()`
+provides normalized multi-source discovery across GIO, Flatpak, Snap, DPKG,
+RPM, Pacman, Nix, and AppStream metadata.
 
 ## Upgrade from flutter_device_apps 1.x
 
@@ -55,4 +57,4 @@ deprecated aliases in 2.x.
 
 - [List Android apps with icons and configure package visibility](https://github.com/okmsbun/flutter_device_apps_android/blob/HEAD/doc/list-installed-android-apps.md)
 - [List macOS apps and configure App Sandbox access](https://github.com/okmsbun/flutter_device_apps_macos/blob/HEAD/doc/api-capabilities.md)
-- [Search Linux desktop apps and find file handlers](https://pub.dev/packages/flutter_device_apps_linux)
+- [Discover Linux apps across local sources and find file handlers](https://pub.dev/packages/flutter_device_apps_linux)

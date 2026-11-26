@@ -1,6 +1,6 @@
 name: flutter_device_apps
 description: List installed apps in Flutter on Android, macOS, and Linux. Get app icons and metadata, launch apps, and detect app technologies.
-version: 2.1.0
+version: 2.2.0
 repository: https://github.com/okmsbun/flutter_device_apps
 issue_tracker: https://github.com/okmsbun/flutter_device_apps/issues
 topics:
@@ -21,7 +21,7 @@ dependencies:
   flutter:
     sdk: flutter
   flutter_device_apps_android: ^2.2.0
-  flutter_device_apps_linux: ^1.0.0
+  flutter_device_apps_linux: ^1.1.1
   flutter_device_apps_macos: ^1.1.0
 
 dev_dependencies:

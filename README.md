@@ -20,7 +20,7 @@ Requires Flutter 3.44+ and Dart 3.12+.
 | --- | --- | --- |
 | Android | API 24+ | List visible packages, inspect APK technologies, and watch app install or removal events. [Android package](https://pub.dev/packages/flutter_device_apps_android) |
 | macOS | macOS 12+ | Discover app bundles, inspect Mach-O dependencies, and find apps that handle a file. [macOS package](https://pub.dev/packages/flutter_device_apps_macos) |
-| Linux | GTK 3 and GIO | Search desktop apps, check MIME handlers, and read AppStream metadata and ELF dependencies. [Linux package](https://pub.dev/packages/flutter_device_apps_linux) |
+| Linux | GTK 3 and GIO | Discover apps across GIO, Flatpak, Snap, DPKG, RPM, Pacman, Nix, and AppStream, check MIME handlers, and inspect ELF dependencies. [Linux package](https://pub.dev/packages/flutter_device_apps_linux) |
 
 ## Usage
 
@@ -33,8 +33,11 @@ import 'package:flutter_device_apps/flutter_device_apps.dart';
 ```
 
 Use `FlutterDeviceAppsAndroid.listApps()`, `FlutterDeviceAppsMacos.listApps()`,
-or `FlutterDeviceAppsLinux.listApps()` on the matching platform. Existing
-`FlutterDeviceApps` calls still resolve to the deprecated Android alias.
+or `FlutterDeviceAppsLinux.listApps()` on the matching platform. On Linux, you
+can also call `FlutterDeviceAppsLinux.discoverApps()` for normalized,
+multi-source discovery with strongly typed models and optional package
+inventory. Existing `FlutterDeviceApps` calls still resolve to the deprecated
+Android alias.
 
 See the [installed apps guide](doc/list-installed-android-apps.md) for a shared
 listing example. Each platform package has its own setup and API documentation.
